@@ -1,0 +1,62 @@
+---
+title: "02-SAS PROC FREQ"
+author: "David Henderson"
+date: "6 September 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libs}
+library(here)
+library(knitr)
+```
+
+#Teamwork!
+
+We got out teams for the hackathon yesterday and I have been paired up with Sumeet Kalia from the University of Toronto. 
+
+I shared the cleaning files that I had prepared already and Sumeet has got back to me with output from SAS that was run with pre-processed files I created. 
+
+##SAS PROC FREQ output
+
+Here is the output from the PROC FREQ he ran in SAS on the cleaned dataset
+
+```{r PROC, out.width = "60%", echo=FALSE}
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-1.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-2.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-3.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-4.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-5.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-6.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-7.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-8.png"))
+include_graphics(here("assets/clean_data/tabulation_png/tabulation-9.png"))
+```
+
+## Initial thoughts from Sumeet
+
+Based on the potential questions provided by the Hackathon organisers
+
+1. What socioeconomic factors contribute to the greatest inequalities in mortality?
+  i) Mortality is a binary outcome 92% alive only 8% dead
+  ii) Socioecnomic factors could be categorical predictors, income decile etc.
+  iii) Logistic regression is a possibility but because of rare outcome this may over or under estimate the true standard errorsof the regression coefficients [^1] [^2]
+  iv) Perhaps a log-binomial model would be better...
+  
+2. Does the healthy immigrant advantage extend to the second generation?
+  i) 1st, 2nd, 3rd generation can be considered as ordinal
+  ii) Propotional odds model based on identified covariates?
+  
+3. Does the risk of cardiovascular mortality vary among immigrants from different source countries?
+  i) Using `death_cause-2` variable we can see that only 18,107 indivudals (0.42%) died from CVD - very small proportion of 4.34 million
+  ii) Maybe we should examine the distribution of ethnicity of patients who died due to CVD with patients who are alive (92%) or patients who did die but not due to CVD (7.4%). 
+  
+Generally - Shape file might be handy to plot adjusted probabilities from logistic/log-binomial or ordinal prop.odds models at the province level and then use colour gradient to plot on the map. 
+  
+[^1]: Barros AJ, Hirakata VN, [Alternatives for logistic regression in cross-sectional studies: an empirical comparison of models that directly estimate the prevalence ratio.](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/1471-2288-3-21) BMC Med Res Methodol. 2003 Oct; 3:21
+
+[^2]: Greenland S. [Model-based estimates of relative risks and other epidemiologic measures in studies of common outcomes and in case-control studies.](https://academic.oup.com/aje/article/160/4/301/165918) Am J Epidemiol. 2004 Aig; 160(4):301-5
+

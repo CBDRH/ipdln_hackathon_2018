@@ -1,0 +1,360 @@
+---
+title: "Exploratory analysis"
+author: "David Henderson"
+date: "6 September 2018"
+output:
+  html_document:
+    df_print: paged
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
+```
+
+# Intro
+
+Building on Sumeet's intitial thoughts I want to get a quick look of the socioeonomic variables that might predict mortality.
+
+##Packages
+
+Load required packages
+
+```{r libs}
+library(tidyverse)
+library(magrittr)
+library(here)
+library(DT)
+library(ggthemes)
+library(extrafont)
+library(classInt)
+theme_set(theme_minimal(base_size = 16, base_family = "Roboto"))
+```
+
+##Data
+
+Load the cleaned data file
+
+```{r load}
+load(here("assets/clean_data/clean_data.rds"))
+load(here("assets/clean_data/shapefile.rds"))
+```
+
+
+#Mortality by predictor
+
+##Age group
+
+```{r age_dead}
+clean_data %>% 
+  count(age_grp, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total) -> age_dead
+datatable(age_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+plot it
+
+```{r plot_age, fig.width=12}
+age_dead %>% 
+  ggplot(aes(age_grp, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom") +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by Age group",
+       x = "",
+       y = "", 
+       fill = "")
+```
+
+##Age at immigration
+
+```{r label, options}
+clean_data %>% 
+  count(age_imm, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total) -> ageimm_dead
+datatable(ageimm_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+plot
+
+```{r plot-ageimm, fig.width=12}
+ageimm_dead %>% 
+  ggplot(aes(age_imm, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom", 
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by Age group at immigration",
+       x = "",
+       y = "", 
+       fill = "")
+```
+
+
+##Sex
+
+```{r sex-dead}
+clean_data %>% 
+  count(sex, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total)  -> sex_dead
+datatable(sex_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+plot it
+
+```{r plot_sex, fig.width=9}
+sex_dead %>% 
+  ggplot(aes(sex, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom") +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by Sex",
+       x = "",
+       y = "")
+```
+
+##Income decile
+
+
+```{r count}
+clean_data %>% 
+  count(loinc_decile, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total)  -> inc_dead
+datatable(inc_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+```{r plot_inc, fig.width=9}
+inc_dead %>% 
+  ggplot(aes(loinc_decile, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom") +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by Income decile",
+       x = "",
+       y = "",
+       fill = "")
+```
+
+##Education
+
+```{r edu-dead}
+clean_data %>% 
+  count(education, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total)  -> edu_dead
+datatable(edu_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+plot it
+
+```{r plot-edu, fig.width = 12}
+edu_dead %>% 
+  ggplot(aes(education, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by highest level of education obtained",
+       x = "",
+       y = "",
+       fill = "")
+```
+
+##Aboriginal identity
+
+```{r abor-count}
+clean_data %>% 
+  count(ab_id_detailed, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total)   -> ab_dead
+datatable(ab_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+
+plot it
+
+```{r ad-dead, fig.width=12}
+ab_dead %>% 
+  ggplot(aes(ab_id_detailed, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by Aboriginal identity",
+       x = "",
+       y = "",
+       fill = "")
+```
+
+
+## Province of residence
+
+```{r prov, options}
+clean_data %>% 
+  count(province, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total)  -> prov_dead
+prov_dead
+datatable(prov_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+plot it
+
+```{r plot-prov, fig.width=9}
+prov_dead %>% 
+  ggplot(aes(province, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by Province of residence",
+       x = "",
+       y = "",
+       fill = "")
+```
+
+and a map
+
+```{r map_prov, fig.width=10, fig.height=6}
+prov_dead %<>%
+  filter(type == "frq_dead_grp") %>% 
+  mutate(frq = round(frq * 100,2))
+
+prov_dead %>% 
+  left_join(., shapefile) %>% 
+  ggplot(.) +
+  geom_sf(aes(fill = frq),
+          colour = "black",
+          size = 0.3) +
+  scale_fill_distiller(palette = "Blues", 
+                       name = "Mortality rate %",
+                       direction = 1) +
+  theme(line = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_line(colour = "transparent"),
+        legend.position = "bottom") +
+  labs(title = "Mortality rate (%)",
+       subtitle = "by Province")
+```
+
+
+##Activities of daily living
+
+```{r adl-dead}
+clean_data %>% 
+  count(adl_difficulty, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total)  -> adl_dead
+datatable(adl_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+```{r plot-adl, fig.width=9}
+adl_dead %>% 
+  ggplot(aes(adl_difficulty, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom") +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by reported difficulty with Activities of Daily Living",
+       x = "",
+       y = "",
+       fill = "")
+```
+
+##Country of birth
+
+```{r birth}
+clean_data %>% 
+  count(birth_country, dead) %>% 
+  spread(dead, n) %>% 
+  mutate(total = sum(Dead) + sum(`Not Dead`),
+         frq_dead_grp = Dead / (Dead + `Not Dead`),
+         frq_dead_total = Dead/total) %>% 
+  select(-total) %>% 
+  gather(type, frq, frq_dead_grp:frq_dead_total) -> birth_dead
+datatable(birth_dead, extensions = "Buttons", options = list(
+  dom = "Bfrtip"))
+```
+
+```{r birth_2, fig.width=12}
+birth_dead %>% 
+  ggplot(aes(birth_country, frq, fill = type)) +
+  geom_col(position = "dodge") +
+  scale_fill_ptol(labels = c("% of group who died", "% of total who died")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  labs(title = "Percentage of indivudals who died",
+       subtitle = "by reported difficulty with Activities of Daily Living",
+       x = "",
+       y = "",
+       fill = "")
+```
+
+
+
+
+
+
+
+
