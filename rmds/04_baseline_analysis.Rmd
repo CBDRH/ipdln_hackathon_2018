@@ -6,6 +6,7 @@ output:
   html_document:
     df_print: paged
     theme: spacelab
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -28,7 +29,7 @@ library(feather)
 library(speedglm)
 library(broom)
 
-clean_data <- read_feather(path="../assets/clean_data.feather")
+clean_data <- read_feather(path="../assets/clean_data/clean_data.feather")
 
 # str(clean_data)
 
@@ -53,10 +54,21 @@ baseglm_df <- tidy(baseglm) %>%
               bind_cols(as.data.frame(exp(confint(baseglm)))) %>%
               rename(ci95_lower = "2.5 %", ci95_upper = "97.5 %")
 
-kable(baseglm_df)
+baseglm_df
 ```
 
 ## SAS PROC LOGISTIC parameter estimates
 
 ![](../assets/Sumeet/PROC_LOGISTIC_baseline_model.png)
 
+```{r save, eval=FALSE}
+save(baseglm, file = "../assets/clean_data/baseglm.rds")
+feather::write_feather(baseglm_df, path="../assets/clean_data/baseglm_df.feather")
+```
+
+
+#Session info
+
+```{r session_info}
+devtools::session_info()
+```
