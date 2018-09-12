@@ -1,13 +1,13 @@
 ---
 title: "01_data-cleaning"
-author: "David Henderson"
+author: "David Henderson, Tim Churches"
 date: "2018-08-30"
 output: html_document
 ---
 
 ## Introduction
 
-This is the code used to import and clean the provided data files for the Hackathon.
+This is the code used to import and clean the provided data files for the Hackathon. Factors are relevelled so that the logistic regression outout agrees with SAS.
 
 
 ###Packages
@@ -17,6 +17,7 @@ Load packages required...
 ```{r}
 library(tidyverse)
 library(magrittr) #Pipe operators
+library(feather)
 library(sf)    #maps and shapefile reading
 theme_set(theme_minimal(base_size = 16))
 ```
@@ -32,8 +33,8 @@ I've downloaded some population estimates for each of the provinces which will h
 I've also downloaded a shapefile of Canadian provinces from [this link](https://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm) as I think it will be nice to map some of the variables.
 
 ```{r load_data}
-raw_data <- read_csv(here("raw_data/ipdln_synth_final.csv"))
-shapefile <- read_sf(here("raw_data/wether_gov_shapefile/province.shp"))
+raw_data <- read_csv(here::here("raw_data/ipdln_synth_final.csv"))
+shapefile <- read_sf(here::here("raw_data/wether_gov_shapefile/province.shp"))
 ```
 
 
@@ -47,11 +48,12 @@ The first thing I'll do is get a quick skim of the `raw-data` file to get an ide
 glimpse(raw_data)
 ```
 
-Ok. All these variables are categorical and I need to label the values as per the metadata held in the `metadata` file folder (see [the github repo](https://github.com/davidhen/ipdln_hackathon) for files). 
+Ok. All these variables are categorical and we need to label the values as per the metadata held in the `metadata` file folder (see [the github repo](https://github.com/davidhen/ipdln_hackathon) for files),
+but change some of the levels so that we get the correct reference classes in `glm()`.
 
 ###Missing data
 
-Before I factorise everything - I'd like to check if there is any missing data in the data frame
+Before we factorise everything - we'd like to check if there is any missing data in the data frame
 
 ```{r visdat}
 map_df(raw_data, function(x) sum(is.na(x)))
@@ -200,11 +202,11 @@ raw_data %<>%
   #Note the definitions in the metadata file - 3rd generation does not mean
   #what I would intuitively think
   rename(generation = GENSTPOB_synth) %>% 
+  mutate(generation = if_else(generation == 3, 0L, generation)) %>%
   mutate(generation = factor(generation,
-                             levels = c(1:3),
-                             labels = c("1st Generation", "2nd Generation",
-                                        "3rd Generation"))
-         ) %>% 
+                             levels = c(0:2),
+                             labels = c("3rd Generation","1st Generation", "2nd Generation"))
+         ) %>%
   rename(education = HCDD_synth) %>% 
   mutate(education = factor(education,
                             levels = c(1:13),
@@ -244,11 +246,12 @@ raw_data %<>%
                                              "Concept not applicable"))
          ) %>% 
   rename(mar_stat = MARST_synth) %>% 
+  mutate(mar_stat = if_else(mar_stat == 2, 0L, mar_stat)) %>%
   mutate(mar_stat = factor(mar_stat,
-                           levels = c(1:5),
-                           labels = c("Divorced", "Married", "Separated", 
+                           levels = c(0,1,3,4,5),
+                           labels = c("Married", "Divorced", "Separated",
                                       "Never married", "Widowed"))
-         ) %>% 
+         ) %>%
   rename(occupation = NOCSBRD_synth) %>% 
   mutate(occupation = factor(occupation,
                              levels = c(1:11),
@@ -271,25 +274,27 @@ raw_data %<>%
                                             "Outside Canada"))
          ) %>% 
   rename(province = PR_synth) %>% 
+  mutate(province = if_else(province == 35, 0L, province)) %>%
   mutate(province = factor(province,
-                           levels = c(10, 11, 12, 13, 24, 35,
+                           levels = c(0, 10, 11, 12, 13, 24,
                                       46, 47, 48, 59, 60, 61, 62),
-                           labels = c("Newfoundland and Labrador", 
-                                      "Prince Edward Island", 
+                           labels = c("Ontario", "Newfoundland and Labrador",
+                                      "Prince Edward Island",
                                       "Nova Scotia", "New Brunswick", "Quebec",
-                                      "Ontario", "Manitoba", "Saskatchewan",
-                                      "Alberta", "British Columbia", "Yukon", 
+                                      "Manitoba", "Saskatchewan",
+                                      "Alberta", "British Columbia", "Yukon",
                                       "Northwest Territories", "Nunavut"))
-         ) %>% 
+         ) %>%
   rename(repairs = RPAIR_synth) %>% 
   mutate(repairs = factor(repairs,
                           levels = c(1:4),
                           labels = c("No", "Minor", "Major", "Not applicable"))
          ) %>% 
   rename(rur_urb = RUINDFG_synth) %>% 
+  mutate(rur_urb = if_else(rur_urb == 2, 0L, rur_urb)) %>%
   mutate(rur_urb = factor(rur_urb,
-                          levels = c(1, 2),
-                          labels = c("Rural", "Urban"))
+                          levels = c(0, 1),
+                          labels = c("Urban", "Rural"))
         ) %>% 
   rename(sex = SEX_synth) %>% 
   mutate(sex = factor(sex,
@@ -297,9 +302,10 @@ raw_data %<>%
                       labels = c("Female", "Male"))
          ) %>% 
   rename(dead = S_DEAD_synth) %>% 
+  mutate(dead = if_else(dead == 2, 0L, dead)) %>%
   mutate(dead = factor(dead,
-                       levels = c(1,2),
-                       labels = c("Dead", "Not Dead"))
+                       levels = c(0,1),
+                       labels = c("Not Dead", "Dead"))
          ) %>% 
   rename(transport = TRMODE_synth) %>% 
   mutate(transport = factor(transport,
@@ -323,10 +329,11 @@ raw_data %<>%
                                      "70-74", "75-79", "80-84", "85-89", "90 plus"))
          ) %>% 
   rename(loinc_decile = d_licoratio_da_bef_synth) %>% 
+  mutate(loinc_decile = if_else(loinc_decile == 10, 0L, loinc_decile)) %>%
   mutate(loinc_decile = factor(loinc_decile,
-                               levels = c(1:10),
-                               labels = c("1 - lowest", "2", "3", "4", "5",
-                                          "6", "7", "8", "9", "10 - highest")))
+                               levels = c(0:9),
+                               labels = c("10 - highest", "1 - lowest", "2", "3", "4", "5",
+                                          "6", "7", "8", "9" )))
   
 
 ```
@@ -334,16 +341,11 @@ raw_data %<>%
 
 ###Save
 
-I'll save the cleaned dataset with a new name `clean_data` which can be loaded directly in other analysis files
+We'll save the cleaned dataset with a new name `clean_data` which can be loaded directly in other analysis files, using the feather package which is much faster than the base R `save()` and `load()`.
 
 ```{r save, eval=FALSE}
 clean_data <- raw_data
-save(clean_data, file = here("assets/clean_data/clean_data.rds"))
-rm(clean_data)
-```
-
-
-```{r tidy_1, echo=FALSE}
+write_feather(clean_data, path=here("assets/clean_data.feather"))
 rm(raw_data)
 ```
 
@@ -369,7 +371,7 @@ shapefile %<>%
 
 And a quick plot of the blank file to check it looks ok
 
-```{r plot_shape, fig.width=9, fig.height=6}
+```{r plot_shape, fig.width=9, fig.height=6, eval=TRUE}
 shapefile %>% 
   ggplot() +
   geom_sf() +
@@ -380,8 +382,8 @@ shapefile %>%
 
 ###Save it
 
-```{r save_shp, eval=FALSE}
-save(shapefile, file = here("assets/clean_data/shapefile.rds"))
+```{r save_shp, eval=TRUE}
+save(shapefile, file = here::here("assets/clean_data/shapefile.rds"))
 ```
 
 

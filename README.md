@@ -1,6 +1,6 @@
 # IPDLN hackathon
 
-Code from a hackathon held on 11th Septemeber 2018 at the IPDLN conference in Banff, Canada. 
+Code from a hackathon held on 11th September 2018 at the IPDLN conference in Banff, Canada. 
 
 Work here was done by Sumeet Kalia, from the University of Toronto, Tim Churches from UNSW Medicine, and David Henderson from Urban Big Data Centre, University of Glasgow
 
