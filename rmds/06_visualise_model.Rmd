@@ -1,0 +1,121 @@
+---
+title: "Visualise baseline model"
+author: "David Henderson, Tim Churches, Sumeet Kalia"
+date: "6-11 September 2018"
+output:
+  html_document:
+    df_print: paged
+    theme: spacelab
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
+```
+
+# Intro
+
+
+##Packages
+
+```{r libs}
+library(tidyverse)
+library(magrittr)
+library(feather)
+library(effects)
+theme_set(theme_minimal(base_size = 16))
+```
+
+##Data
+
+```{r load}
+baseglm_df <- read_feather(here::here("assets/clean_data/baseglm_df.feather"))
+baseglm_df
+```
+
+
+```{r plot}
+baseglm_df %>% 
+  slice(2:15) %>% #Start with age groups only
+  ggplot(aes(or, term)) +
+  geom_vline(aes(xintercept = 1), 
+             size = 0.25, 
+             linetype = "dashed") +
+  geom_errorbarh(aes(xmax = ci95_upper, xmin = ci95_lower), 
+                size = 0.5,
+                height = 0.2,
+                colour = "black") +
+  geom_point(size = 2, colour = "#4477AA") +
+  labs(title = "Mortality odds ratio",
+       subtitle = "Reference: age_grp19-24",
+       y = "",
+       x = "Odds ratio")
+  
+```
+
+
+```{r label, options}
+baseglm_df %>% 
+  slice(17:25) %>% #loinc_decil
+  ggplot(aes(or, term)) +
+  geom_vline(aes(xintercept = 1), 
+             size = 0.25, 
+             linetype = "dashed") +
+  geom_errorbarh(aes(xmax = ci95_upper, xmin = ci95_lower), 
+                size = 0.5,
+                height = 0.2,
+                colour = "black") +
+  geom_point(size = 2, colour = "#4477AA") +
+  labs(title = "Mortality odds ratio",
+       subtitle = "Reference: loinc_decile10",
+       y = "",
+       x = "Odds ratio")
+```
+
+
+```{r province}
+baseglm_df %>% 
+  slice(27:38) %>% #province
+  ggplot(aes(or, term)) +
+  geom_vline(aes(xintercept = 1), 
+             size = 0.25, 
+             linetype = "dashed") +
+  geom_errorbarh(aes(xmax = ci95_upper, xmin = ci95_lower), 
+                size = 0.5,
+                height = 0.2,
+                colour = "black") +
+  geom_point(size = 2, colour = "#4477AA") +
+  labs(title = "Mortality odds ratio",
+       subtitle = "Reference: provinceOntario",
+       y = "",
+       x = "Odds ratio")
+```
+
+
+```{r gen}
+baseglm_df %>% 
+  slice(45:46) %>% #generation
+  ggplot(aes(or, term)) +
+  geom_vline(aes(xintercept = 1), 
+             size = 0.25, 
+             linetype = "dashed") +
+  geom_errorbarh(aes(xmax = ci95_upper, xmin = ci95_lower), 
+                size = 0.5,
+                height = 0.2,
+                colour = "black") +
+  geom_point(size = 2, colour = "#4477AA") +
+  labs(title = "Mortality odds ratio",
+       subtitle = "Reference: 3rd generation",
+       y = "",
+       x = "Odds ratio")
+  
+```
+
+
+
+#Session info
+
+```{r devtools}
+devtools::session_info()
+```

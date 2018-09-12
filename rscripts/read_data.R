@@ -1,7 +1,7 @@
 library(dplyr)
 library(readr)
 
-clean_data <- read_csv(file="../ipdln_hackathon_2018_data/ipdln_synth_final.csv") %>%
+clean_data <- read_csv(file="ipdln_hackathon_2018_data/ipdln_synth_final.csv") %>%
   rename(ab_id_dichot = ABDERR_synth) %>% 
   mutate(ab_id_dichot = factor(ab_id_dichot,
                                levels = c(1, 2),
@@ -274,5 +274,5 @@ clean_data <- read_csv(file="../ipdln_hackathon_2018_data/ipdln_synth_final.csv"
 
 str(clean_data)
 
-feather::write_feather(clean_data, path="assets/clean_data.feather")
+feather::write_feather(clean_data, path="assets/clean_data/clean_data.feather")
 

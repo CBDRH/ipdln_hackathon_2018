@@ -1,0 +1,101 @@
+---
+title: "Visualise expanded model"
+author: "David Henderson, Tim Churches, Sumeet Kalia"
+date: "6-11 September 2018"
+output:
+  html_document:
+    df_print: paged
+    theme: spacelab
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
+```
+
+# Intro
+
+
+##Packages
+
+```{r libs}
+library(tidyverse)
+library(magrittr)
+library(feather)
+library(effects)
+theme_set(theme_minimal(base_size = 16))
+```
+
+##Data
+
+```{r load}
+expglm_df <- read_feather(here::here("assets/clean_data/expglm_df.feather"))
+expglm_df
+```
+
+
+```{r plot}
+orplot <- function(df, slice_range, ref_level) {
+    df %>% 
+      slice(slice_range) %>% #Start with age groups only
+      ggplot(aes(or, term)) +
+      geom_vline(aes(xintercept = 1), 
+                 size = 0.25, 
+                 linetype = "dashed") +
+      geom_errorbarh(aes(xmax = ci95_upper, xmin = ci95_lower), 
+                    size = 0.5,
+                    height = 0.2,
+                    colour = "black") +
+      geom_point(size = 2, colour = "#4477AA") +
+      scale_x_log10() +
+      labs(title = "Mortality odds ratio",
+           subtitle = paste("Reference:",  ref_level),
+           y = "",
+           x = "Odds ratio")
+}
+
+orplot(expglm_df, slice_range=2:15, ref_level="age_grp19-24")
+
+```
+
+
+```{r loinc_decile, options}
+orplot(expglm_df, slice_range=59:67, ref_level="loinc_decile10")
+```
+
+
+```{r province}
+orplot(expglm_df, slice_range=69:80, ref_level="provinceOntario")
+```
+
+
+```{r gen}
+orplot(expglm_df, slice_range=45:46, ref_level="3rd generation")
+```
+
+```{r ed}
+orplot(expglm_df, slice_range=47:58, ref_level="No formal education")
+```
+
+```{r mar}
+orplot(expglm_df, slice_range=81:84, ref_level="Married")
+```
+
+```{r kids}
+orplot(expglm_df, slice_range=85:86, ref_level="No kids")
+```
+
+```{r visible_minority}
+orplot(expglm_df, slice_range=27:39, ref_level="Not a visible minority")
+```
+
+```{r employ}
+orplot(expglm_df, slice_range=43:44, ref_level="Full-time work")
+```
+
+#Session info
+
+```{r devtools}
+devtools::session_info()
+```

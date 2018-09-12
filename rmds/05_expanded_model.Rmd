@@ -29,7 +29,7 @@ library(effects)
 ## Load data
 
 ```{r load-data-a}
-clean_data <- read_feather(path="../assets/clean_data.feather")
+clean_data <- read_feather(path=here::here("assets/clean_data/clean_data.feather"))
 ```
 
 ```{r expanded_glm-a}
@@ -50,3 +50,7 @@ expglm_df <- tidy(expglm) %>%
 kable(expglm_df)
 ```
 
+```{r save-expglm, eval=FALSE}
+save(expglm, file = here::here("assets/clean_data/expglm.rds"))
+feather::write_feather(expglm_df, path=here::here("assets/clean_data/expglm_df.feather"))
+```

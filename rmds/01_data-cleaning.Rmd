@@ -1,6 +1,6 @@
 ---
 title: "01_data-cleaning"
-author: "David Henderson, Tim Churches"
+author: "David Henderson, Tim Churches, Sumeet Kalia"
 date: "2018-08-30"
 output: html_document
 ---
@@ -32,11 +32,13 @@ I've downloaded some population estimates for each of the provinces which will h
 
 I've also downloaded a shapefile of Canadian provinces from [this link](https://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2011-eng.cfm) as I think it will be nice to map some of the variables.
 
-```{r load_data}
+```{r load_data_csv}
 raw_data <- read_csv(here::here("raw_data/ipdln_synth_final.csv"))
-shapefile <- read_sf(here::here("raw_data/wether_gov_shapefile/province.shp"))
 ```
 
+```{r load_data_shape, eval=FALSE}
+shapefile <- read_sf(here::here("raw_data/wether_gov_shapefile/province.shp"))
+```
 
 ##Clean data
 
@@ -171,16 +173,18 @@ raw_data %<>%
                                            "Australia, NZ, Oceania & Greenland"))
          ) %>% 
   rename(vis_minority = DVISMIN_synth) %>% 
+  mutate(vis_minority = if_else(vis_minority == 14, 0L, vis_minority)) %>%
   mutate(vis_minority = factor(vis_minority,
-                               levels = c(1:14),
-                               labels = c("Chinese", "South Asian", "Black",
+                               levels = c(0:13),
+                               labels = c("Not a visible minority",
+                                          "Chinese", "South Asian", "Black",
                                           "Filipino", "Latin American", 
                                           "Southeast Asian", "Arab", "West Asian",
                                           "Korean", "Japanese", 
                                           "Other visible minority",
                                           "Multiple visible minority", 
-                                          "Aboriginal self-reporting",
-                                          "Not a visible minority"))
+                                          "Aboriginal self-reporting"
+                                          ))
          ) %>% 
   rename(no_fam_members = EFCNT_PP_R_synth) %>% 
   mutate(no_fam_members = factor(no_fam_members,
@@ -343,9 +347,9 @@ raw_data %<>%
 
 We'll save the cleaned dataset with a new name `clean_data` which can be loaded directly in other analysis files, using the feather package which is much faster than the base R `save()` and `load()`.
 
-```{r save, eval=FALSE}
+```{r save, eval=TRUE}
 clean_data <- raw_data
-write_feather(clean_data, path=here("assets/clean_data.feather"))
+write_feather(clean_data, path=here::here("assets/clean_data/clean_data.feather"))
 rm(raw_data)
 ```
 
@@ -356,13 +360,13 @@ rm(raw_data)
 
 Quick look at the shapefile to make sure everything is in order
 
-```{r shape}
+```{r shape, eval=FALSE}
 glimpse(shapefile)
 ```
 
 Need to change one variable name and drop some unneeded variables
 
-```{r shape_clean}
+```{r shape_clean, eval=FALSE}
 shapefile %<>% 
   rename(province = NAME) %>% 
   select(province, geometry)
@@ -371,7 +375,7 @@ shapefile %<>%
 
 And a quick plot of the blank file to check it looks ok
 
-```{r plot_shape, fig.width=9, fig.height=6, eval=TRUE}
+```{r plot_shape, fig.width=9, fig.height=6, eval=FALSE}
 shapefile %>% 
   ggplot() +
   geom_sf() +
@@ -382,7 +386,7 @@ shapefile %>%
 
 ###Save it
 
-```{r save_shp, eval=TRUE}
+```{r save_shp, eval=FALSE}
 save(shapefile, file = here::here("assets/clean_data/shapefile.rds"))
 ```
 
