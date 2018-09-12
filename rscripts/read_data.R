@@ -1,213 +1,278 @@
 library(dplyr)
 library(readr)
 
-read_csv(file="../ipdln_hackathon_2018_data/ipdln_synth_final.csv") %>%
-mutate(abderr = factor(ABDERR_synth, levels = 1:2, labels = c("Aboriginal", "Non-aboriginal")),
-       abident = factor(ABINDENT_synth, levels = 1:6, labels = c("North American Indian single response",
-                                                                  "Métis single response",  
-                                                                  "Inuit single response", 
-                                                                  "Multiple Aboriginal identity responses", 
-                                                                  "Aboriginal responses not included elsewhere", 
-                                                                  "Non-Aboriginal identity population"),
-       adifclty = factor(ADIFCLTY_synth, levels = 1:4, labels = c("No", 
-                                                                  "Not stated", 
-                                                                  "Yes, often",  
-                                                                  "Yes, sometimes"),
-       age_imm_revised = factor(AGE_IMM_REVISED_group_synth, levels = 1:9, labels = c("< 5 yrs", 
-                                                                                      " 5 -  9 yrs", 
-                                                                                      "10 - 14 yrs",  
-                                                                                      "15 - 19 yrs",  
-                                                                                      "20 - 24 yrs",  
-                                                                                      "25 - 29 yrs",  
-                                                                                      "30 - 34 yrs",  
-                                                                                      "35 - 39 yrs",  
-                                                                                      "40 - 44 yrs",  
-                                                                                      "45 - 49 yrs",  
-                                                                  "50 - 54 yrs",  
-                                                                  "55 - 59 yrs",  
-                                                                  "60+ yrs",
-                                                                  "Non-permanent residents",
-                                                                  "Non-immigrants and institutional residents")),
-       citsm = factor(CITSM_synth, levels=1:2, labels=c("Canadian citizen by birth", "Not a Canadian citizen by birth")),
-       cod1 = factor(COD1_synth, levels=1:5, labels=c("Communicable, maternal, perinatal, and nutritional conditions",
-                                                       "Noncommunicable diseases", 
-                                                       "Injuries", 
-                                                       "Other causes of death or cause of death not available", 
-                                                       "Did not die")),
-       cod2 = factor(COD2_synth, levels=1:14, labels=c("Infectious and parasitic diseases",
-                                                        "Respiratory infections",
-                                                        "Colon and rectal cancers",
-                                                        "Female Breast cancer",
-                                                        "Diabetes mellitus",
-                                                        "Alzheimer’s disease and other dementias",
-                                                        "Ischemic heart disease", 
-                                                        "Cerebrovascular disease", 
-                                                        "Respiratory diseases", 
-                                                        "Digestive diseases", 
-                                                        "Genitourinary diseases", 
-                                                        "Unintentional injuries", 
-                                                        "Other causes of death or cause of death not available",
-                                                        "Did not die")),
-       cowd = factor(COWD_synth, levels=1:7, labels=c(
-                                        "Unpaid family workers - Worked without pay for a relative in a family business or farm",
-                                        "Paid worker - Originally self-employed without paid help, incorporated",
-                                        "Paid worker - Originally self-employed with paid help, incorporated",
-                                        "Paid Worker - Working for wages, salary, tips or commission",
-                                        "Self-employed without paid help, not incorporated",
-                                        "Self-employed with paid help, not Incorporated",
-                                        "Not applicable")),
-      disabfl = factor(DISABFL_synth, levels=1:4, labels=c("No", 
-                                                            "Not stated", 
-                                                            "Yes, often", 
-                                                            "Yes, sometimes")),
-      disabil = factor(DISABIL_synth, levels=1:17, labels=c(
-            "Difficulty with daily activities & activities reduced at home and in other activities",
-            "Difficulty with daily activities & activities reduced at home and at work/school",
-            "Difficulty with daily activities & activities reduced at home at work/school and in other activities",
-            "Difficulty with daily activities & activities reduced at work/school and in other activities",
-            "Difficulty with daily activities & activities reduced at home",
-            "Difficulty with daily activities & activities reduced in other activities",
-            "Difficulty with daily activities & activities reduced at work/school",
-            "Difficulty with daily activities", 
-            "No difficulty with daily activities and no reduced activities",
-            "Activities reduced at home and in other activities",
-            "Activities reduced at home and at work/school",
-            "Activities reduced at home, at work/school and in other activities",
-            "Activities reduced at work/school and in other activities",
-            "Activities reduced at home",
-            "Activities reduced in other activities", 
-            "Activities reduced at work/school",
-            "Not stated )),
-      dpob11n = factor(DPOB11N_synth, levels=1:10, labels=c(
-                      "Non-immigrant",
-                      "Latin America and Caribbean", 
-                      "Western Europe",
-                      "Eastern Europe",
-                      "Sub-Saharan Africa",	
-                      "North Africa, South West Asia, Middle East",
-                      "South Asia",
-                      "Southeast Asia",
-                      "East Asia (incl Singapore)",
-                      "Australia, New Zealand, Oceania, Greenland")), 
-      dvismin = factor(DVISMIN_synth, levels=1:10, labels=c(
-                      "Chinese", 
-                      "South Asian", 
-                      "Black",
-                      "Filipino", 
-                      "Latin American", 
-                      "Southeast Asian", 
-                      "Arab", 
-                      "West Asian", 
-                      "Korean", 
-                      "Japanese", 
-                      "Visible minority, n.i.e.", 
-                      "Multiple visible minority",
-                      "Aboriginal self-reporting",
-                      "Not a visible minority")),
-      efcnt_pp_revised = factor(EFCNT_PP_REVISED_synth, levels=1:10, labels=c(
-                      " 1 person", 
-                      " 2 family members", 
-                      " 3 family members", 
-                      " 4 family members",
-                      " 5 family members", 
-                      " 6 family members", 
-                      " 7 family members",
-                      " 8 family members",
-                      " 9 family members",
-                      "10 or more family members")),
-      fol = factor(FOL_synth, levels=1:4, labels=c(
-                    "English", 
-                    "French",
-                    "English and French", 
-                    "Neither English nor French")), 
-      fptim = factor(FPTIM_synth, levels=1:3, labels=c("Worked mainly full-time weeks", 
-                                                        "Worked mainly part-time weeks", 
-                                                        "Not applicable (didn’t work)")),
-      genstpob = factor(GENSTPOB_synth, levels=1:3, labels=c(
-                        "1st generation - Respondent born outside Canada",
-                        "2nd generation - Respondent born in Canada of at least one foreign-born parent",
-                        "3rd generation - Respondent born in Canada and both parents born in Canada")),
-      hcdd = factor(HCDD_synth, levels=1:13, labels=c(
-                      "None",
-                      "High school graduation certificate or equivalency certificate",
-                      "Other trades certificate or diploma",
-                      "Registered apprenticeship certificate",
-                      "College, CEGEP or other non-university certificate or diploma from a program of 3 months to less than 1 year",
-                      "College, CEGEP or other non-university certificate or diploma from a program of 1 year to 2 years",
-                      "College, CEGEP or other non-university certificate or diploma from a program of more than 2 years",
-                      "University certificate or diploma below bachelor level",
-                      "Bachelor's degree",
-                      "University certificate or diploma above bachelor level",
-                      "Degree in medicine, dentistry, veterinary medicine or optometry",
-                      "Master's degree",
-                      "Earned doctorate degree")),
-      immder = factor(IMMDER_synth, levels=1:3, labels=c("Immigrants", 
-                                                        "Non-permanent residents",
-                                                        "Non-immigrants")),
-      kid_group = factor(KID_group_synth, levels=1:3, labels=c(
-                                                        "No children",
-                                                        "One or two children",
-                                                        "Three or more children")),
-      loinca = factor(LOINCA_synth, levels=1:3, labels=c(
-                                                        "Non-low income", 
-                                                        "Low income",
-                                                        "Concept not applicable")),
-      loincb = factor(LOINCA_synth, levels=1:3, labels=c(
-                                                        "Non-low income",
-                                                        "Low income",
-                                                        "Concept not applicable")),
-      marst = factor(MARST_synth, levels=1:5, labels=c(
-                                                        "Divorced",
-                                                        "Legally married (and not separated)" 
-                                                        "Separated, but still legally married",
-                                                        "Never legally married (single)",
-                                                        "Widowed")),
-      nocsbrd = factor(NOCSBRD_synth, levels=1:5, labels=c(
+clean_data <- read_csv(file="../ipdln_hackathon_2018_data/ipdln_synth_final.csv") %>%
+  rename(ab_id_dichot = ABDERR_synth) %>% 
+  mutate(ab_id_dichot = factor(ab_id_dichot,
+                               levels = c(1, 2),
+                               labels = c("Aboriginal ID",
+                                          "Non-Aboriginal ID"))
+         ) %>% 
+  rename(ab_id_detailed = ABIDENT_synth) %>% 
+  mutate(ab_id_detailed = factor(ab_id_detailed,
+                                 levels = c(1:6),
+                                 labels = c("North_Am_Indian", "Mètis",
+                                            "Inuit",
+                                            "Multiple Aborginal ID", 
+                                            "Other Aboriginal",
+                                            "Non-Aboriginal"))
+         ) %>% 
+  rename(adl_difficulty = ADIFCLTY_synth) %>% 
+  mutate(adl_difficulty = factor(adl_difficulty,
+                                 levels = c(1:4),
+                                 labels = c("No", "Not stated", "Often",
+                                            "Sometimes"))
+         ) %>% 
+  rename(age_imm = AGE_IMM_R_group_synth) %>% 
+  mutate(age_imm = factor(age_imm,
+                          levels = c(1:15),
+                          labels = c("<5", "5 to <10", "10 to <15",
+                                     "15 to <20", "20 to <25", "25 to <30",
+                                     "30 to <35", "35 to <40", "40 to <45",
+                                     "45 to <50", "50 to <55", "55 to <60",
+                                     "60 and over", 
+                                     "Non-permanent resident",
+                                     "Non-imigrant and others"
+                                     ))
+         ) %>% 
+  rename(citizen_stat = CITSM_synth) %>% 
+  mutate(citizen_stat = factor(citizen_stat,
+                               levels = c(1, 2),
+                               labels = c("Canadian", "non-Canadian"))
+         ) %>% 
+  rename(cause_death_1 = COD1_synth) %>% 
+  mutate(cause_death_1 = factor(cause_death_1,
+                                levels = c(1:5),
+                                labels = c("Communicable etc.", 
+                                           "Noncommunicable", "Injuries",
+                                           "Other causes or NA",
+                                           "Did not Die"))
+         ) %>% 
+  rename(cause_death_2 = COD2_synth) %>% 
+  mutate(cause_death_2 = factor(cause_death_2,
+                                levels = c(1:14),
+                                labels = c("Infectious diseases", 
+                                           "Respiratory infections",
+                                           "Colon and rectal cancers",
+                                           "Breast cancers", "Diabetes",
+                                           "Dementia", "IHD", "CVD",
+                                           "Respiratory diseases",
+                                           "Digestive diseases",
+                                           "Genitourinary diseases",
+                                           "Unintentional injuries",
+                                           "Other causes or NA",
+                                           "Did not Die"
+                                           ))
+         ) %>% 
+  rename(worker_class = COWD_synth) %>% 
+  mutate(worker_class = factor(worker_class,
+                               levels = c(1:7),
+                               labels = c("Unpaid family workers", 
+                                          "Paid worker,no help",
+                                          "Paid worker,paid help",
+                                          "Paid Worker",
+                                          "Self-employed,no help",
+                                          "Self-employed,paid help",
+                                          "Not applicable "))
+         ) %>% 
+  rename(adl_disab_difficulty = DISABFL_synth) %>% 
+  mutate(adl_disab_difficulty = factor(adl_disab_difficulty,
+                                       levels = c(1:4),
+                                       labels = c("No", "Not stated",
+                                                  "Often", "Sometimes"))
+         ) %>% 
+  rename(adl_disab_diff_type = DISABIL_synth) %>% 
+  mutate(adl_disab_diff_type = factor(adl_disab_diff_type,
+                                      levels = c(1:17),
+                                      labels = c("ADL & Home & other",
+                                                 "ADL & Home & Work/School",
+                                                 "ADL & Home & Work/School & other",
+                                                 "ADL & Work & other", "ADL & Home",
+                                                 "ADL & other", "ADL & Work/school",
+                                                 "ADL", "None", "Home & other",
+                                                 "Home & Work/school",
+                                                 "Home & Work/school & other",
+                                                 "Work/school & other", "Home",
+                                                 "Other", "Work/school",
+                                                 "Not stated"))
+         ) %>% 
+  rename(birth_country = DPOB11N_synth) %>% 
+  mutate(birth_country = factor(birth_country,
+                                levels = c(1:10),
+                                labels = c("non-Immigrant",
+                                           "Latin America & Caribbean",
+                                           "Western Europe", "Eastern Europe",
+                                           "Sub-Saharan Africa",
+                                           "N Africa, SW Asia & Middle East",
+                                           "S Asia", "SE Asia", "E Asia", 
+                                           "Australia, NZ, Oceania & Greenland"))
+         ) %>% 
+  rename(vis_minority = DVISMIN_synth) %>% 
+  mutate(vis_minority = factor(vis_minority,
+                               levels = c(1:14),
+                               labels = c("Chinese", "South Asian", "Black",
+                                          "Filipino", "Latin American", 
+                                          "Southeast Asian", "Arab", "West Asian",
+                                          "Korean", "Japanese", 
+                                          "Other visible minority",
+                                          "Multiple visible minority", 
+                                          "Aboriginal self-reporting",
+                                          "Not a visible minority"))
+         ) %>% 
+  rename(no_fam_members = EFCNT_PP_R_synth) %>% 
+  mutate(no_fam_members = factor(no_fam_members,
+                                 levels = c(1:10),
+                                 labels = c("1", "2", "3", "4", "5",
+                                            "6", "7", "8", "9", "10 or more"))
+         ) %>% 
+  rename(first_lang = FOL_synth) %>% 
+  mutate(first_lang = factor(first_lang,
+                             levels = c(1:4),
+                             labels = c("English", "French", "English & French",
+                                        "Other"))
+         ) %>% 
+  rename(employ_status = FPTIM_synth) %>% 
+  mutate(employ_status = factor(employ_status,
+                                levels = c(1:3),
+                                labels = c("Full-time", "Part-time", "Didn't work"))
+         ) %>% 
+  #Note the definitions in the metadata file - 3rd generation does not mean
+  #what I would intuitively think
+  rename(generation = GENSTPOB_synth) %>% 
+  mutate(generation = if_else(generation == 3, 0L, generation)) %>%
+  mutate(generation = factor(generation,
+                             levels = c(0:2),
+                             labels = c("3rd Generation","1st Generation", "2nd Generation"))
+         ) %>%
+  rename(education = HCDD_synth) %>% 
+  mutate(education = factor(education,
+                            levels = c(1:13),
+                            labels = c("None", "High School", "Trades Cert/Dip",
+                                       "Apprenticeship Cert/Dip",
+                                       "Non-Uni Cert/Dip < 1 year",
+                                       "Non-Uni Cert/Dip 1-2 years",
+                                       "Non-Uni Cert/Dip > 2years",
+                                       "Uni Cert/Dip below Bachelor's",
+                                       "Bachelor's degree",
+                                       "Uni Cert/Dip above Bachelor's",
+                                       "Medicine etc.", "Master's degree",
+                                       "Doctorate"))
+         ) %>% 
+  rename(immigration_stat = IMMDER_synth) %>% 
+  mutate(immigration_stat = factor(immigration_stat,
+                                   levels = c(1:3),
+                                   labels = c("Immigrant", "Non-permanent resident",
+                                              "Non-immigrant"))
+         ) %>% 
+  rename(no_kids = KID_group_synth) %>% 
+  mutate(no_kids = factor(no_kids,
+                          levels = c(1:3),
+                          labels = c("None", "1 or 2",
+                                     "3 or more"))
+         ) %>% 
+  rename(lo_inc_aftertax = LOINCA_synth) %>% 
+  mutate(lo_inc_aftertax = factor(lo_inc_aftertax,
+                                  levels = c(1:3),
+                                  labels = c("non-low income", "low income",
+                                             "Concept not applicable"))
+         ) %>% 
+  rename(lo_inc_beforetax = LOINCB_synth) %>% 
+  mutate(lo_inc_beforetax = factor(lo_inc_beforetax,
+                                   levels = c(1:3),
+                                  labels = c("non-low income", "low income",
+                                             "Concept not applicable"))
+         ) %>% 
+  rename(mar_stat = MARST_synth) %>% 
+  mutate(mar_stat = if_else(mar_stat == 2, 0L, mar_stat)) %>%
+  mutate(mar_stat = factor(mar_stat,
+                           levels = c(0,1,3,4,5),
+                           labels = c("Married", "Divorced", "Separated",
+                                      "Never married", "Widowed"))
+         ) %>%
+  rename(occupation = NOCSBRD_synth) %>% 
+  mutate(occupation = factor(occupation,
+                             levels = c(1:11),
+                             labels = c("Management", "Business", 
+                                        "Science", "Health", "Govt & Religion",
+                                        "Art & Culture", "Sales & Service",
+                                        "Trades & Transport", "Primary industry",
+                                        "Manufacturing", "Not Applicable"))
+         ) %>% 
+  rename(official_lang = OLN_synth) %>% 
+  mutate(official_lang = factor(official_lang,
+                                levels = c(1:4),
+                                labels = c("English", "French", "English & French",
+                                           "Other"))
+         ) %>% 
+  rename(place_of_birth = POBDER_synth) %>% 
+  mutate(place_of_birth = factor(place_of_birth,
+                                 levels = c(1:3),
+                                 labels = c("Home province","Other province",
+                                            "Outside Canada"))
+         ) %>% 
+  rename(province = PR_synth) %>% 
+  mutate(province = if_else(province == 35, 0L, province)) %>%
+  mutate(province = factor(province,
+                           levels = c(0, 10, 11, 12, 13, 24,
+                                      46, 47, 48, 59, 60, 61, 62),
+                           labels = c("Ontario", "Newfoundland and Labrador",
+                                      "Prince Edward Island",
+                                      "Nova Scotia", "New Brunswick", "Quebec",
+                                      "Manitoba", "Saskatchewan",
+                                      "Alberta", "British Columbia", "Yukon",
+                                      "Northwest Territories", "Nunavut"))
+         ) %>%
+  rename(repairs = RPAIR_synth) %>% 
+  mutate(repairs = factor(repairs,
+                          levels = c(1:4),
+                          labels = c("No", "Minor", "Major", "Not applicable"))
+         ) %>% 
+  rename(rur_urb = RUINDFG_synth) %>% 
+  mutate(rur_urb = if_else(rur_urb == 2, 0L, rur_urb)) %>%
+  mutate(rur_urb = factor(rur_urb,
+                          levels = c(0, 1),
+                          labels = c("Urban", "Rural"))
+        ) %>% 
+  rename(sex = SEX_synth) %>% 
+  mutate(sex = factor(sex,
+                      levels = c(1, 2),
+                      labels = c("Female", "Male"))
+         ) %>% 
+  rename(dead = S_DEAD_synth) %>% 
+  mutate(dead = if_else(dead == 2, 0L, dead)) %>%
+  mutate(dead = factor(dead,
+                       levels = c(0,1),
+                       labels = c("Not Dead", "Dead"))
+         ) %>% 
+  rename(transport = TRMODE_synth) %>% 
+  mutate(transport = factor(transport,
+                            levels = c(1:9),
+                            labels = c("Bicycle", "Driver", "Motorbike",
+                                       "Other", "Passenger", "Taxi", 
+                                       "Public Transport", "Walk", "Not applicable"))
+         ) %>% 
+  rename(year_imm = YRIM_group_synth) %>% 
+  mutate(year_imm = factor(year_imm,
+                           levels = c(1:6),
+                           labels = c("2002 or later", "1997-2001", "1987-1996",
+                                      "1986 or earlier", "Non-permanent resident",
+                                      "Non-immigrant and others"))
+         ) %>% 
+  rename(age_grp = age_group_synth) %>% 
+  mutate(age_grp = factor(age_grp,
+                          levels = c(1:15),
+                          labels = c("19-24", "25-29", "30-34", "35-39", "40-44",
+                                     "45-49", "50-54", "55-59", "60-64", "65-69",
+                                     "70-74", "75-79", "80-84", "85-89", "90 plus"))
+         ) %>% 
+  rename(loinc_decile = d_licoratio_da_bef_synth) %>% 
+  mutate(loinc_decile = if_else(loinc_decile == 10, 0L, loinc_decile)) %>%
+  mutate(loinc_decile = factor(loinc_decile,
+                               levels = c(0:9),
+                               labels = c("10 - highest", "1 - lowest", "2", "3", "4", "5",
+                                          "6", "7", "8", "9" )))
 
+str(clean_data)
 
-
-
-
-                 
-       ) -> hd
-
-
-,
-col_types=cols(
-  ABDERR_synth = parse_factor(c("1","2"), levels = c("Aboriginal", "Non-aboriginal")),
-  ABIDENT_synth = col_integer(),
-  ADIFCLTY_synth = col_integer(),
-  CITSM_synth = col_integer(),
-  COWD_synth = col_integer(),
-  DISABFL_synth = col_integer(),
-  DISABIL_synth = col_integer(),
-  DVISMIN_synth = col_integer(),
-  FOL_synth = col_integer(),
-  FPTIM_synth = col_integer(),
-  GENSTPOB_synth = col_integer(),
-  HCDD_synth = col_integer(),
-  IMMDER_synth = col_integer(),
-  LOINCA_synth = col_integer(),
-  LOINCB_synth = col_integer(),
-  MARST_synth = col_integer(),
-  NOCSBRD_synth = col_integer(),
-  OLN_synth = col_integer(),
-  POBDER_synth = col_integer(),
-  SEX_synth = col_integer(),
-  TRMODE_synth = col_integer(),
-  RPAIR_synth = col_integer(),
-  PR_synth = col_integer(),
-  RUINDFG_synth = col_integer(),
-  d_licoratio_da_bef_synth = col_integer(),
-  S_DEAD_synth = col_integer(),
-  EFCNT_PP_R_synth = col_integer(),
-  AGE_IMM_R_group_synth = col_integer(),
-  COD1_synth = col_integer(),
-  COD2_synth = col_integer(),
-  DPOB11N_synth = col_integer(),
-  KID_group_synth = col_integer(),
-  YRIM_group_synth = col_integer(),
-  age_group_synth = col_integer()
-)               
-)
+feather::write_feather(clean_data, path="assets/clean_data.feather")
 
