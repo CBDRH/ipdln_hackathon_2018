@@ -1,0 +1,52 @@
+---
+title: "Expanded logistic model"
+author: "Tim Churches, Sumeet Kalia, David Henderson"
+date: "6-12 September 2018"
+output:
+  html_document:
+    df_print: paged
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
+
+library(tidyverse)
+library(magrittr)
+library(knitr)
+library(feather)
+library(speedglm)
+library(broom)
+library(effects)
+```
+
+# Intro
+
+# Expanded model
+
+
+## Load data
+
+```{r load-data-a}
+clean_data <- read_feather(path="../assets/clean_data.feather")
+```
+
+```{r expanded_glm-a}
+expglm <- speedglm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + vis_minority + first_lang + employ_status + generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + no_kids, 
+                     family=binomial(), data=clean_data)
+
+summary(expglm)
+```
+
+```{r baseline_glm-b}
+
+expglm_df <- tidy(expglm) %>%
+              bind_cols(tibble(or=exp(coef(expglm)))) %>%
+              bind_cols(as.data.frame(exp(confint(expglm)))) %>%
+              rename(ci95_lower = "2.5 %", ci95_upper = "97.5 %")
+
+kable(expglm_df)
+```
+

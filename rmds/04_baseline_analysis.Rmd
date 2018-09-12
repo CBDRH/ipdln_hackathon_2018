@@ -11,6 +11,14 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(digits = 3)
+
+library(tidyverse)
+library(magrittr)
+library(knitr)
+library(feather)
+library(speedglm)
+library(broom)
+library(effects)
 ```
 
 # Intro
@@ -21,12 +29,6 @@ options(digits = 3)
 ## Replicate in R
 
 ```{r baseline_glm-a}
-library(tidyverse)
-library(magrittr)
-library(knitr)
-library(feather)
-library(speedglm)
-library(broom)
 
 clean_data <- read_feather(path="../assets/clean_data.feather")
 
