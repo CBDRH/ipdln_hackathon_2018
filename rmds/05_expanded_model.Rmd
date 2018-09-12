@@ -32,6 +32,10 @@ library(effects)
 clean_data <- read_feather(path=here::here("assets/clean_data/clean_data.feather"))
 ```
 
+```{r subset-data-a, eval=TRUE}
+clean_data %<>% sample_frac(size=0.5)
+```
+
 ```{r expanded_glm-a}
 expglm <- speedglm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + vis_minority + first_lang + employ_status + generation + education + loinc_decile + rur_urb +
                      province  + mar_stat + no_kids, 
@@ -50,7 +54,7 @@ expglm_df <- tidy(expglm) %>%
 kable(expglm_df)
 ```
 
-```{r save-expglm, eval=FALSE}
+```{r save-expglm, eval=TRUE}
 save(expglm, file = here::here("assets/clean_data/expglm.rds"))
 feather::write_feather(expglm_df, path=here::here("assets/clean_data/expglm_df.feather"))
 ```

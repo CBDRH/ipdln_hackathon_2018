@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
 options(digits = 3)
 ```
 
@@ -36,11 +36,15 @@ expglm_df
 
 
 ```{r plot}
-orplot <- function(df, slice_range, ref_level) {
-    df %>% 
-      slice(slice_range) %>% #Start with age groups only
-      ggplot(aes(or, term)) +
-      geom_vline(aes(xintercept = 1), 
+orplot <- function(df, slice_range, ref_level, sorted=FALSE) {
+    df %<>% 
+      slice(slice_range) #Start with age groups only
+    if(sorted) {
+        g <- df %>%  ggplot(aes(or, fct_reorder(term, or)))
+    } else {
+        g <- df %>%  ggplot(aes(or, term))
+    }
+      g + geom_vline(aes(xintercept = 1), 
                  size = 0.25, 
                  linetype = "dashed") +
       geom_errorbarh(aes(xmax = ci95_upper, xmin = ci95_lower), 
@@ -66,7 +70,7 @@ orplot(expglm_df, slice_range=59:67, ref_level="loinc_decile10")
 
 
 ```{r province}
-orplot(expglm_df, slice_range=69:80, ref_level="provinceOntario")
+orplot(expglm_df, slice_range=69:80, ref_level="provinceOntario", sorted=TRUE)
 ```
 
 
@@ -75,11 +79,11 @@ orplot(expglm_df, slice_range=45:46, ref_level="3rd generation")
 ```
 
 ```{r ed}
-orplot(expglm_df, slice_range=47:58, ref_level="No formal education")
+orplot(expglm_df, slice_range=47:58, ref_level="No formal education", sorted=TRUE)
 ```
 
 ```{r mar}
-orplot(expglm_df, slice_range=81:84, ref_level="Married")
+orplot(expglm_df, slice_range=81:84, ref_level="Married", sorted=TRUE)
 ```
 
 ```{r kids}
@@ -87,7 +91,7 @@ orplot(expglm_df, slice_range=85:86, ref_level="No kids")
 ```
 
 ```{r visible_minority}
-orplot(expglm_df, slice_range=27:39, ref_level="Not a visible minority")
+orplot(expglm_df, slice_range=27:39, ref_level="Not a visible minority", sorted=TRUE)
 ```
 
 ```{r employ}
