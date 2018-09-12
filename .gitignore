@@ -5,4 +5,6 @@
 assets/clean_data/baseglm.rds
 assets/clean_data/baseglm_df.feather
 assets/clean_data/clean_data.feather
+assets/clean_data/expglm.rds
+assets/clean_data/expglm_df.feather
 ipdln_hackathon_2018_data/ipdln_synth_final.csv

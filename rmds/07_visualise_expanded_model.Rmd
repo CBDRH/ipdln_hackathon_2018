@@ -52,30 +52,50 @@ orplot <- function(df, slice_range, ref_level, sorted=FALSE) {
                     height = 0.2,
                     colour = "black") +
       geom_point(size = 2, colour = "#4477AA") +
-      scale_x_log10() +
+      scale_x_log10(breaks = scales::pretty_breaks()) +
       labs(title = "Mortality odds ratio",
            subtitle = paste("Reference:",  ref_level),
            y = "",
-           x = "Odds ratio")
+           x = "Odds Ratio - log scale")
 }
 
-orplot(expglm_df, slice_range=2:15, ref_level="age_grp19-24")
+
+y_labels = c("90 plus", "85-89", "80-84", "75-79", "70-74", "65-69",
+             "60-64", "55-59", "50-54", "45-49", "40-44", "35-39", "30-34",
+             "25-29")
+
+orplot(expglm_df, slice_range=2:15, ref_level="19-24") +
+  scale_y_discrete(labels = rev(y_labels)) +
+  labs(y = "Age group")
 
 ```
 
 
 ```{r loinc_decile, options}
-orplot(expglm_df, slice_range=59:67, ref_level="loinc_decile10")
+y_labels <- c("9", "8", "7", "6", "5", "4", "3", "2", "1 - lowest")
+
+orplot(expglm_df, slice_range=59:67, ref_level="Decile 10 - highest") +
+  scale_y_discrete(labels = y_labels) +
+  labs(y = "Income")
 ```
 
 
 ```{r province}
-orplot(expglm_df, slice_range=69:80, ref_level="provinceOntario", sorted=TRUE)
+y_labels <- c("Nunavut", "Yukon", "Prince Edward Island", "Quebec", 
+              "Northwest Territories", "Saskatchewan", "Manitoba",
+              "Alberta", "Nova Scotia", "New Brunswick", "British Columbia",
+              "Newfoundland & Labrador")
+
+orplot(expglm_df, slice_range=69:80, ref_level="Ontario", sorted=TRUE) +
+  scale_y_discrete(labels = rev(y_labels))
 ```
 
 
 ```{r gen}
-orplot(expglm_df, slice_range=45:46, ref_level="3rd generation")
+y_labels <- c("2nd generation", "1st generation")
+
+orplot(expglm_df, slice_range=45:46, ref_level="3rd generation") +
+  scale_y_discrete(labels = rev(y_labels))
 ```
 
 ```{r ed}

@@ -54,6 +54,9 @@ expglm_df <- tidy(expglm) %>%
 kable(expglm_df)
 ```
 
+
+
+
 ```{r save-expglm, eval=TRUE}
 save(expglm, file = here::here("assets/clean_data/expglm.rds"))
 feather::write_feather(expglm_df, path=here::here("assets/clean_data/expglm_df.feather"))
