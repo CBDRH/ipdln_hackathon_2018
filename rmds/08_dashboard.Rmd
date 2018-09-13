@@ -12,7 +12,7 @@ Column
 ### Odds ratio of Mortality by Province
     
 ```{r map, echo=FALSE, fig.cap="A caption", out.width = '100%'}
-knitr::include_graphics(here::here("assets/Sumeet/odds-ratio.PNG"))
+knitr::include_graphics(here::here("assets/Sumeet/mort-rate.PNG"))
 ```
 
 

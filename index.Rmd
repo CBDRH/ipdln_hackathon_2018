@@ -8,6 +8,8 @@ output:
 Code and materials for the Hackathon held in Banff, Canada at IPDLN 2018
 
 * [Data Cleaning](01_data-cleaning.html)
-* [Socioeconomic predictors of mortality](03_copy_02.html)
+* [Model fit](05_expanded_model.html)
+* [Visulise model](07_visualise_expanded_model.html)
+* [Dashboard](08_dashboard.html)
 
 
