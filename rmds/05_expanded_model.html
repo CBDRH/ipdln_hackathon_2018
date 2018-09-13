@@ -139,806 +139,156 @@ $(document).ready(function () {
 <h2>Load data</h2>
 <pre class="r"><code>clean_data &lt;- read_feather(path=here::here(&quot;assets/clean_data/clean_data.feather&quot;))</code></pre>
 <pre class="r"><code>clean_data %&lt;&gt;% sample_frac(size=0.5)</code></pre>
-<pre class="r"><code>expglm &lt;- glm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + 
-                     vis_minority + first_lang + employ_status + 
-                     first_lang + generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + no_kids, 
+<pre class="r"><code>expglm &lt;- speedglm(dead ~ age_grp + sex +  
+                     employ_status + 
+                     generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat, 
                      family=binomial(), data=clean_data)
 
 summary(expglm)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + 
-##     worker_class + vis_minority + first_lang + employ_status + 
-##     first_lang + generation + education + loinc_decile + rur_urb + 
-##     province + mar_stat + no_kids, family = binomial(), data = clean_data)
+<pre><code>## Generalized Linear Model of class 'speedglm':
 ## 
-## Deviance Residuals: 
-##    Min      1Q  Median      3Q     Max  
-## -2.131  -0.320  -0.172  -0.112   3.723  
+## Call:  speedglm(formula = dead ~ age_grp + sex + employ_status + generation +      education + loinc_decile + rur_urb + province + mar_stat,      data = clean_data, family = binomial()) 
 ## 
 ## Coefficients:
-##                                             Estimate Std. Error z value
-## (Intercept)                                 -5.28485    0.08421  -62.76
-## age_grp25-29                                 0.09172    0.03845    2.39
-## age_grp30-34                                 0.17186    0.03774    4.55
-## age_grp35-39                                 0.58181    0.03437   16.93
-## age_grp40-44                                 0.96211    0.03181   30.24
-## age_grp45-49                                 1.44838    0.03027   47.85
-## age_grp50-54                                 1.53815    0.03035   50.69
-## age_grp55-59                                 2.16153    0.02961   72.99
-## age_grp60-64                                 2.54834    0.02967   85.88
-## age_grp65-69                                 2.56894    0.02992   85.85
-## age_grp70-74                                 2.67595    0.03006   89.03
-## age_grp75-79                                 2.85190    0.03021   94.40
-## age_grp80-84                                 3.08918    0.03064  100.82
-## age_grp85-89                                 3.39365    0.03217  105.48
-## age_grp90 plus                               3.61972    0.03628   99.76
-## sexMale                                      0.65049    0.00629  103.35
-## ab_id_dichotAboriginal ID                   -0.22234    0.01439  -15.45
-## adl_difficultyNot stated                     0.80364    0.01933   41.58
-## adl_difficultyOften                          1.22204    0.00784  155.89
-## adl_difficultySometimes                      0.70689    0.00751   94.08
-## worker_classPaid worker,no help             -0.12729    0.08205   -1.55
-## worker_classPaid worker,paid help           -0.13217    0.08126   -1.63
-## worker_classPaid Worker                     -0.16796    0.07675   -2.19
-## worker_classSelf-employed,no help           -0.09226    0.07818   -1.18
-## worker_classSelf-employed,paid help         -0.16439    0.08172   -2.01
-## worker_classNot applicable                   0.38339    0.08071    4.75
-## vis_minorityChinese                         -0.53230    0.02370  -22.46
-## vis_minoritySouth Asian                     -0.52343    0.02702  -19.37
-## vis_minorityBlack                           -0.31324    0.02958  -10.59
-## vis_minorityFilipino                        -0.39425    0.04133   -9.54
-## vis_minorityLatin American                  -0.68223    0.05548  -12.30
-## vis_minoritySoutheast Asian                 -0.42880    0.05570   -7.70
-## vis_minorityArab                            -0.41012    0.05437   -7.54
-## vis_minorityWest Asian                      -0.65845    0.07644   -8.61
-## vis_minorityKorean                          -0.65331    0.08409   -7.77
-## vis_minorityJapanese                        -0.23922    0.06742   -3.55
-## vis_minorityOther/multiple visible minority -0.66181    0.06675   -9.91
-## first_langFrench                            -0.14937    0.01198  -12.47
-## first_langEnglish &amp; French                  -0.16183    0.03809   -4.25
-## first_langOther                             -0.08026    0.01946   -4.12
-## employ_statusPart-time                       0.15447    0.01287   12.00
-## employ_statusDidn't work                     0.40243    0.02766   14.55
-## generation1st Generation                    -0.09832    0.00861  -11.43
-## generation2nd Generation                     0.08818    0.00844   10.45
-## educationNone                                0.11212    0.00789   14.21
-## educationTrades Cert/Dip                    -0.03357    0.01214   -2.76
-## educationApprenticeship Cert/Dip            -0.06463    0.01450   -4.46
-## educationNon-Uni Cert/Dip &lt; 1 year          -0.08210    0.02130   -3.85
-## educationNon-Uni Cert/Dip 1-2 years         -0.20088    0.01379  -14.57
-## educationNon-Uni Cert/Dip &gt; 2years          -0.18722    0.01428  -13.11
-## educationUni Cert/Dip below Bachelor's      -0.10732    0.01555   -6.90
-## educationBachelor's degree                  -0.31723    0.01363  -23.27
-## educationUni Cert/Dip above Bachelor's      -0.22601    0.02535   -8.92
-## educationMedicine etc.                      -0.08712    0.04595   -1.90
-## educationMaster's degree                    -0.38517    0.02133  -18.06
-## educationDoctorate                          -0.15486    0.03628   -4.27
-## loinc_decile1 - lowest                       0.27542    0.01823   15.10
-## loinc_decile2                                0.26891    0.01431   18.79
-## loinc_decile3                                0.34624    0.01370   25.28
-## loinc_decile4                                0.27169    0.01381   19.67
-## loinc_decile5                                0.21094    0.01400   15.07
-## loinc_decile6                                0.14421    0.01425   10.12
-## loinc_decile7                                0.10742    0.01446    7.43
-## loinc_decile8                                0.07862    0.01460    5.38
-## loinc_decile9                                0.04834    0.01479    3.27
-## rur_urbRural                                -0.05979    0.00726   -8.24
-## provinceNewfoundland and Labrador           -0.05664    0.02231   -2.54
-## provincePrince Edward Island                 0.14212    0.04172    3.41
-## provinceNova Scotia                         -0.02527    0.01668   -1.52
-## provinceNew Brunswick                       -0.02088    0.01900   -1.10
-## provinceQuebec                               0.14548    0.01214   11.98
-## provinceManitoba                             0.07413    0.01479    5.01
-## provinceSaskatchewan                         0.06523    0.01589    4.11
-## provinceAlberta                             -0.02586    0.01114   -2.32
-## provinceBritish Columbia                    -0.06287    0.00945   -6.65
-## provinceYukon                                0.23381    0.06585    3.55
-## provinceNorthwest Territories                0.06232    0.05579    1.12
-## provinceNunavut                              0.41088    0.06035    6.81
-## mar_statDivorced                             0.11672    0.01018   11.46
-## mar_statSeparated                            0.14925    0.01713    8.71
-## mar_statNever married                        0.19264    0.00985   19.55
-## mar_statWidowed                              0.65931    0.00830   79.47
-## no_kids1 or 2                               -0.17931    0.00784  -22.88
-## no_kids3 or more                            -0.37120    0.01933  -19.20
-##                                             Pr(&gt;|z|)    
-## (Intercept)                                  &lt; 2e-16 ***
-## age_grp25-29                                 0.01706 *  
-## age_grp30-34                                 5.3e-06 ***
-## age_grp35-39                                 &lt; 2e-16 ***
-## age_grp40-44                                 &lt; 2e-16 ***
-## age_grp45-49                                 &lt; 2e-16 ***
-## age_grp50-54                                 &lt; 2e-16 ***
-## age_grp55-59                                 &lt; 2e-16 ***
-## age_grp60-64                                 &lt; 2e-16 ***
-## age_grp65-69                                 &lt; 2e-16 ***
-## age_grp70-74                                 &lt; 2e-16 ***
-## age_grp75-79                                 &lt; 2e-16 ***
-## age_grp80-84                                 &lt; 2e-16 ***
-## age_grp85-89                                 &lt; 2e-16 ***
-## age_grp90 plus                               &lt; 2e-16 ***
-## sexMale                                      &lt; 2e-16 ***
-## ab_id_dichotAboriginal ID                    &lt; 2e-16 ***
-## adl_difficultyNot stated                     &lt; 2e-16 ***
-## adl_difficultyOften                          &lt; 2e-16 ***
-## adl_difficultySometimes                      &lt; 2e-16 ***
-## worker_classPaid worker,no help              0.12080    
-## worker_classPaid worker,paid help            0.10383    
-## worker_classPaid Worker                      0.02865 *  
-## worker_classSelf-employed,no help            0.23794    
-## worker_classSelf-employed,paid help          0.04426 *  
-## worker_classNot applicable                   2.0e-06 ***
-## vis_minorityChinese                          &lt; 2e-16 ***
-## vis_minoritySouth Asian                      &lt; 2e-16 ***
-## vis_minorityBlack                            &lt; 2e-16 ***
-## vis_minorityFilipino                         &lt; 2e-16 ***
-## vis_minorityLatin American                   &lt; 2e-16 ***
-## vis_minoritySoutheast Asian                  1.4e-14 ***
-## vis_minorityArab                             4.6e-14 ***
-## vis_minorityWest Asian                       &lt; 2e-16 ***
-## vis_minorityKorean                           7.9e-15 ***
-## vis_minorityJapanese                         0.00039 ***
-## vis_minorityOther/multiple visible minority  &lt; 2e-16 ***
-## first_langFrench                             &lt; 2e-16 ***
-## first_langEnglish &amp; French                   2.2e-05 ***
-## first_langOther                              3.7e-05 ***
-## employ_statusPart-time                       &lt; 2e-16 ***
-## employ_statusDidn't work                     &lt; 2e-16 ***
-## generation1st Generation                     &lt; 2e-16 ***
-## generation2nd Generation                     &lt; 2e-16 ***
-## educationNone                                &lt; 2e-16 ***
-## educationTrades Cert/Dip                     0.00570 ** 
-## educationApprenticeship Cert/Dip             8.4e-06 ***
-## educationNon-Uni Cert/Dip &lt; 1 year           0.00012 ***
-## educationNon-Uni Cert/Dip 1-2 years          &lt; 2e-16 ***
-## educationNon-Uni Cert/Dip &gt; 2years           &lt; 2e-16 ***
-## educationUni Cert/Dip below Bachelor's       5.1e-12 ***
-## educationBachelor's degree                   &lt; 2e-16 ***
-## educationUni Cert/Dip above Bachelor's       &lt; 2e-16 ***
-## educationMedicine etc.                       0.05795 .  
-## educationMaster's degree                     &lt; 2e-16 ***
-## educationDoctorate                           2.0e-05 ***
-## loinc_decile1 - lowest                       &lt; 2e-16 ***
-## loinc_decile2                                &lt; 2e-16 ***
-## loinc_decile3                                &lt; 2e-16 ***
-## loinc_decile4                                &lt; 2e-16 ***
-## loinc_decile5                                &lt; 2e-16 ***
-## loinc_decile6                                &lt; 2e-16 ***
-## loinc_decile7                                1.1e-13 ***
-## loinc_decile8                                7.3e-08 ***
-## loinc_decile9                                0.00108 ** 
-## rur_urbRural                                 &lt; 2e-16 ***
-## provinceNewfoundland and Labrador            0.01112 *  
-## provincePrince Edward Island                 0.00066 ***
-## provinceNova Scotia                          0.12962    
-## provinceNew Brunswick                        0.27184    
-## provinceQuebec                               &lt; 2e-16 ***
-## provinceManitoba                             5.3e-07 ***
-## provinceSaskatchewan                         4.0e-05 ***
-## provinceAlberta                              0.02027 *  
-## provinceBritish Columbia                     2.9e-11 ***
-## provinceYukon                                0.00038 ***
-## provinceNorthwest Territories                0.26400    
-## provinceNunavut                              9.9e-12 ***
-## mar_statDivorced                             &lt; 2e-16 ***
-## mar_statSeparated                            &lt; 2e-16 ***
-## mar_statNever married                        &lt; 2e-16 ***
-## mar_statWidowed                              &lt; 2e-16 ***
-## no_kids1 or 2                                &lt; 2e-16 ***
-## no_kids3 or more                             &lt; 2e-16 ***
+##  ------------------------------------------------------------------ 
+##                                        Estimate Std. Error z value
+## (Intercept)                            -5.99317    0.02211 -271.04
+## age_grp25-29                            0.11430    0.02738    4.17
+## age_grp30-34                            0.24090    0.02664    9.04
+## age_grp35-39                            0.68427    0.02439   28.05
+## age_grp40-44                            1.14069    0.02250   50.70
+## age_grp45-49                            1.70439    0.02141   79.62
+## age_grp50-54                            1.83550    0.02141   85.73
+## age_grp55-59                            2.52395    0.02077  121.50
+## age_grp60-64                            2.96274    0.02070  143.12
+## age_grp65-69                            2.98354    0.02086  143.02
+## age_grp70-74                            3.09258    0.02094  147.67
+## age_grp75-79                            3.29382    0.02104  156.59
+## age_grp80-84                            3.56057    0.02132  167.03
+## age_grp85-89                            3.91021    0.02232  175.20
+## age_grp90 plus                          4.19239    0.02505  167.34
+## sexMale                                 0.68077    0.00436  156.21
+## employ_statusPart-time                  0.22512    0.00893   25.20
+## employ_statusDidn't work                1.16630    0.00589  197.98
+## generation1st Generation               -0.26225    0.00536  -48.95
+## generation2nd Generation                0.09857    0.00572   17.23
+## educationNone                           0.19136    0.00542   35.31
+## educationTrades Cert/Dip                0.04130    0.00842    4.91
+## educationApprenticeship Cert/Dip        0.00592    0.01003    0.59
+## educationNon-Uni Cert/Dip &lt; 1 year     -0.07689    0.01498   -5.13
+## educationNon-Uni Cert/Dip 1-2 years    -0.16197    0.00957  -16.93
+## educationNon-Uni Cert/Dip &gt; 2years     -0.16186    0.00993  -16.30
+## educationUni Cert/Dip below Bachelor's -0.13662    0.01079  -12.66
+## educationBachelor's degree             -0.36841    0.00946  -38.94
+## educationUni Cert/Dip above Bachelor's -0.24855    0.01767  -14.07
+## educationMedicine etc.                 -0.10077    0.03143   -3.21
+## educationMaster's degree               -0.44269    0.01499  -29.53
+## educationDoctorate                     -0.16592    0.02503   -6.63
+## loinc_decile1 - lowest                  0.39083    0.01253   31.19
+## loinc_decile2                           0.39347    0.00986   39.92
+## loinc_decile3                           0.42100    0.00947   44.44
+## loinc_decile4                           0.33117    0.00957   34.59
+## loinc_decile5                           0.23907    0.00973   24.56
+## loinc_decile6                           0.16404    0.00991   16.55
+## loinc_decile7                           0.12514    0.01006   12.44
+## loinc_decile8                           0.08228    0.01019    8.08
+## loinc_decile9                           0.04414    0.01033    4.27
+## rur_urbRural                           -0.02882    0.00493   -5.85
+## provinceNewfoundland and Labrador      -0.11480    0.01542   -7.45
+## provincePrince Edward Island            0.15375    0.02880    5.34
+## provinceNova Scotia                     0.01595    0.01152    1.38
+## provinceNew Brunswick                  -0.08670    0.01306   -6.64
+## provinceQuebec                         -0.14852    0.00556  -26.72
+## provinceManitoba                        0.10111    0.01012    9.99
+## provinceSaskatchewan                    0.10982    0.01086   10.11
+## provinceAlberta                         0.00923    0.00769    1.20
+## provinceBritish Columbia               -0.03613    0.00646   -5.59
+## provinceYukon                           0.32780    0.04600    7.13
+## provinceNorthwest Territories           0.22313    0.03746    5.96
+## provinceNunavut                         0.42089    0.04205   10.01
+## mar_statDivorced                        0.18579    0.00705   26.35
+## mar_statSeparated                       0.23323    0.01182   19.74
+## mar_statNever married                   0.28332    0.00678   41.82
+## mar_statWidowed                         0.74883    0.00571  131.10
+##                                         Pr(&gt;|z|)    
+## (Intercept)                             0.00e+00 ***
+## age_grp25-29                            2.99e-05 ***
+## age_grp30-34                            1.55e-19 ***
+## age_grp35-39                           3.58e-173 ***
+## age_grp40-44                            0.00e+00 ***
+## age_grp45-49                            0.00e+00 ***
+## age_grp50-54                            0.00e+00 ***
+## age_grp55-59                            0.00e+00 ***
+## age_grp60-64                            0.00e+00 ***
+## age_grp65-69                            0.00e+00 ***
+## age_grp70-74                            0.00e+00 ***
+## age_grp75-79                            0.00e+00 ***
+## age_grp80-84                            0.00e+00 ***
+## age_grp85-89                            0.00e+00 ***
+## age_grp90 plus                          0.00e+00 ***
+## sexMale                                 0.00e+00 ***
+## employ_statusPart-time                 3.61e-140 ***
+## employ_statusDidn't work                0.00e+00 ***
+## generation1st Generation                0.00e+00 ***
+## generation2nd Generation                1.63e-66 ***
+## educationNone                          4.60e-273 ***
+## educationTrades Cert/Dip                9.30e-07 ***
+## educationApprenticeship Cert/Dip        5.55e-01    
+## educationNon-Uni Cert/Dip &lt; 1 year      2.85e-07 ***
+## educationNon-Uni Cert/Dip 1-2 years     2.63e-64 ***
+## educationNon-Uni Cert/Dip &gt; 2years      1.07e-59 ***
+## educationUni Cert/Dip below Bachelor's  1.00e-36 ***
+## educationBachelor's degree              0.00e+00 ***
+## educationUni Cert/Dip above Bachelor's  6.17e-45 ***
+## educationMedicine etc.                  1.35e-03 ** 
+## educationMaster's degree               1.10e-191 ***
+## educationDoctorate                      3.40e-11 ***
+## loinc_decile1 - lowest                 1.49e-213 ***
+## loinc_decile2                           0.00e+00 ***
+## loinc_decile3                           0.00e+00 ***
+## loinc_decile4                          3.38e-262 ***
+## loinc_decile5                          3.36e-133 ***
+## loinc_decile6                           1.54e-61 ***
+## loinc_decile7                           1.51e-35 ***
+## loinc_decile8                           6.68e-16 ***
+## loinc_decile9                           1.92e-05 ***
+## rur_urbRural                            4.93e-09 ***
+## provinceNewfoundland and Labrador       9.61e-14 ***
+## provincePrince Edward Island            9.38e-08 ***
+## provinceNova Scotia                     1.66e-01    
+## provinceNew Brunswick                   3.19e-11 ***
+## provinceQuebec                         2.52e-157 ***
+## provinceManitoba                        1.70e-23 ***
+## provinceSaskatchewan                    4.85e-24 ***
+## provinceAlberta                         2.30e-01    
+## provinceBritish Columbia                2.27e-08 ***
+## provinceYukon                           1.03e-12 ***
+## provinceNorthwest Territories           2.58e-09 ***
+## provinceNunavut                         1.40e-23 ***
+## mar_statDivorced                       4.65e-153 ***
+## mar_statSeparated                       9.72e-87 ***
+## mar_statNever married                   0.00e+00 ***
+## mar_statWidowed                         0.00e+00 ***
+## 
+## ------------------------------------------------------------------- 
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## 
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 1189342  on 2173323  degrees of freedom
-## Residual deviance:  838833  on 2173240  degrees of freedom
-## AIC: 839001
-## 
-## Number of Fisher Scoring iterations: 7</code></pre>
-<pre class="r"><code>interactionglm &lt;- glm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + 
-                     vis_minority + first_lang + employ_status + 
-                     first_lang + generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + no_kids + generation*education + sex*mar_stat, 
+## null df: 4346648; null deviance: 2381703;
+## residuals df: 4346591; residuals deviance: 1738094;
+## # obs.: 4346649; # non-zero weighted obs.: 4346649;
+## AIC: 1738210; log Likelihood: -869047;
+## RSS: 4695749; dispersion: 1; iterations: 7;
+## rank: 58; max tolerance: 2.38e-10; convergence: TRUE.</code></pre>
+<pre class="r"><code>interactionglm &lt;- glm(dead ~ age_grp + sex +  
+                     employ_status + 
+                     generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + sex*mar_stat, 
                      family=binomial(), data=clean_data)
 
 summary(interactionglm)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + 
-##     worker_class + vis_minority + first_lang + employ_status + 
-##     first_lang + generation + education + loinc_decile + rur_urb + 
-##     province + mar_stat + no_kids + generation * education + 
-##     sex * mar_stat, family = binomial(), data = clean_data)
-## 
-## Deviance Residuals: 
-##    Min      1Q  Median      3Q     Max  
-## -2.157  -0.320  -0.172  -0.112   3.723  
-## 
-## Coefficients:
-##                                                                 Estimate
-## (Intercept)                                                     -5.30109
-## age_grp25-29                                                     0.09383
-## age_grp30-34                                                     0.17330
-## age_grp35-39                                                     0.58066
-## age_grp40-44                                                     0.95946
-## age_grp45-49                                                     1.44121
-## age_grp50-54                                                     1.53036
-## age_grp55-59                                                     2.14614
-## age_grp60-64                                                     2.52882
-## age_grp65-69                                                     2.54821
-## age_grp70-74                                                     2.65456
-## age_grp75-79                                                     2.83002
-## age_grp80-84                                                     3.06836
-## age_grp85-89                                                     3.37256
-## age_grp90 plus                                                   3.59827
-## sexMale                                                          0.72968
-## ab_id_dichotAboriginal ID                                       -0.21678
-## adl_difficultyNot stated                                         0.80467
-## adl_difficultyOften                                              1.22040
-## adl_difficultySometimes                                          0.70528
-## worker_classPaid worker,no help                                 -0.14059
-## worker_classPaid worker,paid help                               -0.14669
-## worker_classPaid Worker                                         -0.17873
-## worker_classSelf-employed,no help                               -0.10400
-## worker_classSelf-employed,paid help                             -0.17750
-## worker_classNot applicable                                       0.37472
-## vis_minorityChinese                                             -0.53880
-## vis_minoritySouth Asian                                         -0.52705
-## vis_minorityBlack                                               -0.32823
-## vis_minorityFilipino                                            -0.41251
-## vis_minorityLatin American                                      -0.68862
-## vis_minoritySoutheast Asian                                     -0.42669
-## vis_minorityArab                                                -0.41551
-## vis_minorityWest Asian                                          -0.66760
-## vis_minorityKorean                                              -0.67137
-## vis_minorityJapanese                                            -0.24212
-## vis_minorityOther/multiple visible minority                     -0.66721
-## first_langFrench                                                -0.15236
-## first_langEnglish &amp; French                                      -0.16054
-## first_langOther                                                 -0.05070
-## employ_statusPart-time                                           0.15669
-## employ_statusDidn't work                                         0.40392
-## generation1st Generation                                        -0.08315
-## generation2nd Generation                                         0.07179
-## educationNone                                                    0.12391
-## educationTrades Cert/Dip                                        -0.04330
-## educationApprenticeship Cert/Dip                                -0.09559
-## educationNon-Uni Cert/Dip &lt; 1 year                              -0.10946
-## educationNon-Uni Cert/Dip 1-2 years                             -0.20747
-## educationNon-Uni Cert/Dip &gt; 2years                              -0.19794
-## educationUni Cert/Dip below Bachelor's                          -0.13445
-## educationBachelor's degree                                      -0.34936
-## educationUni Cert/Dip above Bachelor's                          -0.23219
-## educationMedicine etc.                                          -0.03057
-## educationMaster's degree                                        -0.42669
-## educationDoctorate                                              -0.14553
-## loinc_decile1 - lowest                                           0.27142
-## loinc_decile2                                                    0.25952
-## loinc_decile3                                                    0.33879
-## loinc_decile4                                                    0.26575
-## loinc_decile5                                                    0.20501
-## loinc_decile6                                                    0.13862
-## loinc_decile7                                                    0.10301
-## loinc_decile8                                                    0.07528
-## loinc_decile9                                                    0.04587
-## rur_urbRural                                                    -0.06054
-## provinceNewfoundland and Labrador                               -0.06135
-## provincePrince Edward Island                                     0.14074
-## provinceNova Scotia                                             -0.02799
-## provinceNew Brunswick                                           -0.02294
-## provinceQuebec                                                   0.14411
-## provinceManitoba                                                 0.07347
-## provinceSaskatchewan                                             0.06334
-## provinceAlberta                                                 -0.02608
-## provinceBritish Columbia                                        -0.06355
-## provinceYukon                                                    0.23539
-## provinceNorthwest Territories                                    0.06134
-## provinceNunavut                                                  0.40785
-## mar_statDivorced                                                 0.25023
-## mar_statSeparated                                                0.14093
-## mar_statNever married                                            0.39500
-## mar_statWidowed                                                  0.69363
-## no_kids1 or 2                                                   -0.18519
-## no_kids3 or more                                                -0.38130
-## generation1st Generation:educationNone                          -0.07786
-## generation2nd Generation:educationNone                           0.02544
-## generation1st Generation:educationTrades Cert/Dip                0.00675
-## generation2nd Generation:educationTrades Cert/Dip                0.01847
-## generation1st Generation:educationApprenticeship Cert/Dip        0.03403
-## generation2nd Generation:educationApprenticeship Cert/Dip        0.06212
-## generation1st Generation:educationNon-Uni Cert/Dip &lt; 1 year      0.08598
-## generation2nd Generation:educationNon-Uni Cert/Dip &lt; 1 year      0.03562
-## generation1st Generation:educationNon-Uni Cert/Dip 1-2 years     0.01525
-## generation2nd Generation:educationNon-Uni Cert/Dip 1-2 years    -0.00563
-## generation1st Generation:educationNon-Uni Cert/Dip &gt; 2years      0.01395
-## generation2nd Generation:educationNon-Uni Cert/Dip &gt; 2years     -0.01292
-## generation1st Generation:educationUni Cert/Dip below Bachelor's  0.02830
-## generation2nd Generation:educationUni Cert/Dip below Bachelor's  0.06609
-## generation1st Generation:educationBachelor's degree              0.05930
-## generation2nd Generation:educationBachelor's degree              0.02041
-## generation1st Generation:educationUni Cert/Dip above Bachelor's -0.01969
-## generation2nd Generation:educationUni Cert/Dip above Bachelor's -0.00815
-## generation1st Generation:educationMedicine etc.                 -0.10268
-## generation2nd Generation:educationMedicine etc.                 -0.20640
-## generation1st Generation:educationMaster's degree                0.05663
-## generation2nd Generation:educationMaster's degree                0.03544
-## generation1st Generation:educationDoctorate                     -0.00243
-## generation2nd Generation:educationDoctorate                     -0.15375
-## sexMale:mar_statDivorced                                        -0.24614
-## sexMale:mar_statSeparated                                        0.01473
-## sexMale:mar_statNever married                                   -0.34507
-## sexMale:mar_statWidowed                                         -0.00750
-##                                                                 Std. Error
-## (Intercept)                                                        0.08441
-## age_grp25-29                                                       0.03844
-## age_grp30-34                                                       0.03773
-## age_grp35-39                                                       0.03436
-## age_grp40-44                                                       0.03181
-## age_grp45-49                                                       0.03027
-## age_grp50-54                                                       0.03034
-## age_grp55-59                                                       0.02961
-## age_grp60-64                                                       0.02968
-## age_grp65-69                                                       0.02993
-## age_grp70-74                                                       0.03006
-## age_grp75-79                                                       0.03022
-## age_grp80-84                                                       0.03065
-## age_grp85-89                                                       0.03219
-## age_grp90 plus                                                     0.03630
-## sexMale                                                            0.00836
-## ab_id_dichotAboriginal ID                                          0.01444
-## adl_difficultyNot stated                                           0.01934
-## adl_difficultyOften                                                0.00785
-## adl_difficultySometimes                                            0.00752
-## worker_classPaid worker,no help                                    0.08211
-## worker_classPaid worker,paid help                                  0.08132
-## worker_classPaid Worker                                            0.07681
-## worker_classSelf-employed,no help                                  0.07824
-## worker_classSelf-employed,paid help                                0.08178
-## worker_classNot applicable                                         0.08077
-## vis_minorityChinese                                                0.02377
-## vis_minoritySouth Asian                                            0.02707
-## vis_minorityBlack                                                  0.02957
-## vis_minorityFilipino                                               0.04145
-## vis_minorityLatin American                                         0.05547
-## vis_minoritySoutheast Asian                                        0.05568
-## vis_minorityArab                                                   0.05440
-## vis_minorityWest Asian                                             0.07641
-## vis_minorityKorean                                                 0.08418
-## vis_minorityJapanese                                               0.06741
-## vis_minorityOther/multiple visible minority                        0.06668
-## first_langFrench                                                   0.01199
-## first_langEnglish &amp; French                                         0.03810
-## first_langOther                                                    0.01985
-## employ_statusPart-time                                             0.01289
-## employ_statusDidn't work                                           0.02767
-## generation1st Generation                                           0.01606
-## generation2nd Generation                                           0.01592
-## educationNone                                                      0.01010
-## educationTrades Cert/Dip                                           0.01534
-## educationApprenticeship Cert/Dip                                   0.01979
-## educationNon-Uni Cert/Dip &lt; 1 year                                 0.02820
-## educationNon-Uni Cert/Dip 1-2 years                                0.01767
-## educationNon-Uni Cert/Dip &gt; 2years                                 0.01930
-## educationUni Cert/Dip below Bachelor's                             0.02069
-## educationBachelor's degree                                         0.01831
-## educationUni Cert/Dip above Bachelor's                             0.03443
-## educationMedicine etc.                                             0.06858
-## educationMaster's degree                                           0.03014
-## educationDoctorate                                                 0.05804
-## loinc_decile1 - lowest                                             0.01826
-## loinc_decile2                                                      0.01436
-## loinc_decile3                                                      0.01374
-## loinc_decile4                                                      0.01384
-## loinc_decile5                                                      0.01402
-## loinc_decile6                                                      0.01427
-## loinc_decile7                                                      0.01448
-## loinc_decile8                                                      0.01462
-## loinc_decile9                                                      0.01481
-## rur_urbRural                                                       0.00728
-## provinceNewfoundland and Labrador                                  0.02234
-## provincePrince Edward Island                                       0.04175
-## provinceNova Scotia                                                0.01670
-## provinceNew Brunswick                                              0.01902
-## provinceQuebec                                                     0.01215
-## provinceManitoba                                                   0.01480
-## provinceSaskatchewan                                               0.01592
-## provinceAlberta                                                    0.01116
-## provinceBritish Columbia                                           0.00946
-## provinceYukon                                                      0.06589
-## provinceNorthwest Territories                                      0.05587
-## provinceNunavut                                                    0.06037
-## mar_statDivorced                                                   0.01458
-## mar_statSeparated                                                  0.02678
-## mar_statNever married                                              0.01411
-## mar_statWidowed                                                    0.01009
-## no_kids1 or 2                                                      0.00785
-## no_kids3 or more                                                   0.01935
-## generation1st Generation:educationNone                             0.01975
-## generation2nd Generation:educationNone                             0.02018
-## generation1st Generation:educationTrades Cert/Dip                  0.03116
-## generation2nd Generation:educationTrades Cert/Dip                  0.03247
-## generation1st Generation:educationApprenticeship Cert/Dip          0.03390
-## generation2nd Generation:educationApprenticeship Cert/Dip          0.03810
-## generation1st Generation:educationNon-Uni Cert/Dip &lt; 1 year        0.05785
-## generation2nd Generation:educationNon-Uni Cert/Dip &lt; 1 year        0.05093
-## generation1st Generation:educationNon-Uni Cert/Dip 1-2 years       0.03587
-## generation2nd Generation:educationNon-Uni Cert/Dip 1-2 years       0.03565
-## generation1st Generation:educationNon-Uni Cert/Dip &gt; 2years        0.03355
-## generation2nd Generation:educationNon-Uni Cert/Dip &gt; 2years        0.03875
-## generation1st Generation:educationUni Cert/Dip below Bachelor's    0.03730
-## generation2nd Generation:educationUni Cert/Dip below Bachelor's    0.04162
-## generation1st Generation:educationBachelor's degree                0.03281
-## generation2nd Generation:educationBachelor's degree                0.03485
-## generation1st Generation:educationUni Cert/Dip above Bachelor's    0.06002
-## generation2nd Generation:educationUni Cert/Dip above Bachelor's    0.06676
-## generation1st Generation:educationMedicine etc.                    0.10114
-## generation2nd Generation:educationMedicine etc.                    0.12686
-## generation1st Generation:educationMaster's degree                  0.04838
-## generation2nd Generation:educationMaster's degree                  0.05744
-## generation1st Generation:educationDoctorate                        0.07921
-## generation2nd Generation:educationDoctorate                        0.10751
-## sexMale:mar_statDivorced                                           0.01996
-## sexMale:mar_statSeparated                                          0.03459
-## sexMale:mar_statNever married                                      0.01771
-## sexMale:mar_statWidowed                                            0.01795
-##                                                                 z value
-## (Intercept)                                                      -62.80
-## age_grp25-29                                                       2.44
-## age_grp30-34                                                       4.59
-## age_grp35-39                                                      16.90
-## age_grp40-44                                                      30.16
-## age_grp45-49                                                      47.62
-## age_grp50-54                                                      50.44
-## age_grp55-59                                                      72.47
-## age_grp60-64                                                      85.21
-## age_grp65-69                                                      85.14
-## age_grp70-74                                                      88.30
-## age_grp75-79                                                      93.65
-## age_grp80-84                                                     100.11
-## age_grp85-89                                                     104.77
-## age_grp90 plus                                                    99.11
-## sexMale                                                           87.25
-## ab_id_dichotAboriginal ID                                        -15.01
-## adl_difficultyNot stated                                          41.60
-## adl_difficultyOften                                              155.54
-## adl_difficultySometimes                                           93.78
-## worker_classPaid worker,no help                                   -1.71
-## worker_classPaid worker,paid help                                 -1.80
-## worker_classPaid Worker                                           -2.33
-## worker_classSelf-employed,no help                                 -1.33
-## worker_classSelf-employed,paid help                               -2.17
-## worker_classNot applicable                                         4.64
-## vis_minorityChinese                                              -22.67
-## vis_minoritySouth Asian                                          -19.47
-## vis_minorityBlack                                                -11.10
-## vis_minorityFilipino                                              -9.95
-## vis_minorityLatin American                                       -12.41
-## vis_minoritySoutheast Asian                                       -7.66
-## vis_minorityArab                                                  -7.64
-## vis_minorityWest Asian                                            -8.74
-## vis_minorityKorean                                                -7.98
-## vis_minorityJapanese                                              -3.59
-## vis_minorityOther/multiple visible minority                      -10.01
-## first_langFrench                                                 -12.71
-## first_langEnglish &amp; French                                        -4.21
-## first_langOther                                                   -2.55
-## employ_statusPart-time                                            12.15
-## employ_statusDidn't work                                          14.60
-## generation1st Generation                                          -5.18
-## generation2nd Generation                                           4.51
-## educationNone                                                     12.27
-## educationTrades Cert/Dip                                          -2.82
-## educationApprenticeship Cert/Dip                                  -4.83
-## educationNon-Uni Cert/Dip &lt; 1 year                                -3.88
-## educationNon-Uni Cert/Dip 1-2 years                              -11.74
-## educationNon-Uni Cert/Dip &gt; 2years                               -10.26
-## educationUni Cert/Dip below Bachelor's                            -6.50
-## educationBachelor's degree                                       -19.08
-## educationUni Cert/Dip above Bachelor's                            -6.74
-## educationMedicine etc.                                            -0.45
-## educationMaster's degree                                         -14.16
-## educationDoctorate                                                -2.51
-## loinc_decile1 - lowest                                            14.86
-## loinc_decile2                                                     18.07
-## loinc_decile3                                                     24.66
-## loinc_decile4                                                     19.20
-## loinc_decile5                                                     14.62
-## loinc_decile6                                                      9.71
-## loinc_decile7                                                      7.11
-## loinc_decile8                                                      5.15
-## loinc_decile9                                                      3.10
-## rur_urbRural                                                      -8.31
-## provinceNewfoundland and Labrador                                 -2.75
-## provincePrince Edward Island                                       3.37
-## provinceNova Scotia                                               -1.68
-## provinceNew Brunswick                                             -1.21
-## provinceQuebec                                                    11.86
-## provinceManitoba                                                   4.96
-## provinceSaskatchewan                                               3.98
-## provinceAlberta                                                   -2.34
-## provinceBritish Columbia                                          -6.72
-## provinceYukon                                                      3.57
-## provinceNorthwest Territories                                      1.10
-## provinceNunavut                                                    6.76
-## mar_statDivorced                                                  17.16
-## mar_statSeparated                                                  5.26
-## mar_statNever married                                             27.99
-## mar_statWidowed                                                   68.72
-## no_kids1 or 2                                                    -23.58
-## no_kids3 or more                                                 -19.71
-## generation1st Generation:educationNone                            -3.94
-## generation2nd Generation:educationNone                             1.26
-## generation1st Generation:educationTrades Cert/Dip                  0.22
-## generation2nd Generation:educationTrades Cert/Dip                  0.57
-## generation1st Generation:educationApprenticeship Cert/Dip          1.00
-## generation2nd Generation:educationApprenticeship Cert/Dip          1.63
-## generation1st Generation:educationNon-Uni Cert/Dip &lt; 1 year        1.49
-## generation2nd Generation:educationNon-Uni Cert/Dip &lt; 1 year        0.70
-## generation1st Generation:educationNon-Uni Cert/Dip 1-2 years       0.43
-## generation2nd Generation:educationNon-Uni Cert/Dip 1-2 years      -0.16
-## generation1st Generation:educationNon-Uni Cert/Dip &gt; 2years        0.42
-## generation2nd Generation:educationNon-Uni Cert/Dip &gt; 2years       -0.33
-## generation1st Generation:educationUni Cert/Dip below Bachelor's    0.76
-## generation2nd Generation:educationUni Cert/Dip below Bachelor's    1.59
-## generation1st Generation:educationBachelor's degree                1.81
-## generation2nd Generation:educationBachelor's degree                0.59
-## generation1st Generation:educationUni Cert/Dip above Bachelor's   -0.33
-## generation2nd Generation:educationUni Cert/Dip above Bachelor's   -0.12
-## generation1st Generation:educationMedicine etc.                   -1.02
-## generation2nd Generation:educationMedicine etc.                   -1.63
-## generation1st Generation:educationMaster's degree                  1.17
-## generation2nd Generation:educationMaster's degree                  0.62
-## generation1st Generation:educationDoctorate                       -0.03
-## generation2nd Generation:educationDoctorate                       -1.43
-## sexMale:mar_statDivorced                                         -12.33
-## sexMale:mar_statSeparated                                          0.43
-## sexMale:mar_statNever married                                    -19.48
-## sexMale:mar_statWidowed                                           -0.42
-##                                                                 Pr(&gt;|z|)
-## (Intercept)                                                      &lt; 2e-16
-## age_grp25-29                                                     0.01464
-## age_grp30-34                                                     4.4e-06
-## age_grp35-39                                                     &lt; 2e-16
-## age_grp40-44                                                     &lt; 2e-16
-## age_grp45-49                                                     &lt; 2e-16
-## age_grp50-54                                                     &lt; 2e-16
-## age_grp55-59                                                     &lt; 2e-16
-## age_grp60-64                                                     &lt; 2e-16
-## age_grp65-69                                                     &lt; 2e-16
-## age_grp70-74                                                     &lt; 2e-16
-## age_grp75-79                                                     &lt; 2e-16
-## age_grp80-84                                                     &lt; 2e-16
-## age_grp85-89                                                     &lt; 2e-16
-## age_grp90 plus                                                   &lt; 2e-16
-## sexMale                                                          &lt; 2e-16
-## ab_id_dichotAboriginal ID                                        &lt; 2e-16
-## adl_difficultyNot stated                                         &lt; 2e-16
-## adl_difficultyOften                                              &lt; 2e-16
-## adl_difficultySometimes                                          &lt; 2e-16
-## worker_classPaid worker,no help                                  0.08685
-## worker_classPaid worker,paid help                                0.07124
-## worker_classPaid Worker                                          0.01997
-## worker_classSelf-employed,no help                                0.18376
-## worker_classSelf-employed,paid help                              0.02997
-## worker_classNot applicable                                       3.5e-06
-## vis_minorityChinese                                              &lt; 2e-16
-## vis_minoritySouth Asian                                          &lt; 2e-16
-## vis_minorityBlack                                                &lt; 2e-16
-## vis_minorityFilipino                                             &lt; 2e-16
-## vis_minorityLatin American                                       &lt; 2e-16
-## vis_minoritySoutheast Asian                                      1.8e-14
-## vis_minorityArab                                                 2.2e-14
-## vis_minorityWest Asian                                           &lt; 2e-16
-## vis_minorityKorean                                               1.5e-15
-## vis_minorityJapanese                                             0.00033
-## vis_minorityOther/multiple visible minority                      &lt; 2e-16
-## first_langFrench                                                 &lt; 2e-16
-## first_langEnglish &amp; French                                       2.5e-05
-## first_langOther                                                  0.01065
-## employ_statusPart-time                                           &lt; 2e-16
-## employ_statusDidn't work                                         &lt; 2e-16
-## generation1st Generation                                         2.2e-07
-## generation2nd Generation                                         6.5e-06
-## educationNone                                                    &lt; 2e-16
-## educationTrades Cert/Dip                                         0.00476
-## educationApprenticeship Cert/Dip                                 1.4e-06
-## educationNon-Uni Cert/Dip &lt; 1 year                               0.00010
-## educationNon-Uni Cert/Dip 1-2 years                              &lt; 2e-16
-## educationNon-Uni Cert/Dip &gt; 2years                               &lt; 2e-16
-## educationUni Cert/Dip below Bachelor's                           8.2e-11
-## educationBachelor's degree                                       &lt; 2e-16
-## educationUni Cert/Dip above Bachelor's                           1.5e-11
-## educationMedicine etc.                                           0.65576
-## educationMaster's degree                                         &lt; 2e-16
-## educationDoctorate                                               0.01216
-## loinc_decile1 - lowest                                           &lt; 2e-16
-## loinc_decile2                                                    &lt; 2e-16
-## loinc_decile3                                                    &lt; 2e-16
-## loinc_decile4                                                    &lt; 2e-16
-## loinc_decile5                                                    &lt; 2e-16
-## loinc_decile6                                                    &lt; 2e-16
-## loinc_decile7                                                    1.1e-12
-## loinc_decile8                                                    2.6e-07
-## loinc_decile9                                                    0.00195
-## rur_urbRural                                                     &lt; 2e-16
-## provinceNewfoundland and Labrador                                0.00604
-## provincePrince Edward Island                                     0.00075
-## provinceNova Scotia                                              0.09366
-## provinceNew Brunswick                                            0.22784
-## provinceQuebec                                                   &lt; 2e-16
-## provinceManitoba                                                 6.9e-07
-## provinceSaskatchewan                                             6.9e-05
-## provinceAlberta                                                  0.01942
-## provinceBritish Columbia                                         1.9e-11
-## provinceYukon                                                    0.00035
-## provinceNorthwest Territories                                    0.27221
-## provinceNunavut                                                  1.4e-11
-## mar_statDivorced                                                 &lt; 2e-16
-## mar_statSeparated                                                1.4e-07
-## mar_statNever married                                            &lt; 2e-16
-## mar_statWidowed                                                  &lt; 2e-16
-## no_kids1 or 2                                                    &lt; 2e-16
-## no_kids3 or more                                                 &lt; 2e-16
-## generation1st Generation:educationNone                           8.1e-05
-## generation2nd Generation:educationNone                           0.20751
-## generation1st Generation:educationTrades Cert/Dip                0.82840
-## generation2nd Generation:educationTrades Cert/Dip                0.56943
-## generation1st Generation:educationApprenticeship Cert/Dip        0.31546
-## generation2nd Generation:educationApprenticeship Cert/Dip        0.10299
-## generation1st Generation:educationNon-Uni Cert/Dip &lt; 1 year      0.13717
-## generation2nd Generation:educationNon-Uni Cert/Dip &lt; 1 year      0.48435
-## generation1st Generation:educationNon-Uni Cert/Dip 1-2 years     0.67076
-## generation2nd Generation:educationNon-Uni Cert/Dip 1-2 years     0.87446
-## generation1st Generation:educationNon-Uni Cert/Dip &gt; 2years      0.67762
-## generation2nd Generation:educationNon-Uni Cert/Dip &gt; 2years      0.73880
-## generation1st Generation:educationUni Cert/Dip below Bachelor's  0.44807
-## generation2nd Generation:educationUni Cert/Dip below Bachelor's  0.11229
-## generation1st Generation:educationBachelor's degree              0.07075
-## generation2nd Generation:educationBachelor's degree              0.55808
-## generation1st Generation:educationUni Cert/Dip above Bachelor's  0.74285
-## generation2nd Generation:educationUni Cert/Dip above Bachelor's  0.90281
-## generation1st Generation:educationMedicine etc.                  0.31002
-## generation2nd Generation:educationMedicine etc.                  0.10374
-## generation1st Generation:educationMaster's degree                0.24183
-## generation2nd Generation:educationMaster's degree                0.53723
-## generation1st Generation:educationDoctorate                      0.97557
-## generation2nd Generation:educationDoctorate                      0.15269
-## sexMale:mar_statDivorced                                         &lt; 2e-16
-## sexMale:mar_statSeparated                                        0.67022
-## sexMale:mar_statNever married                                    &lt; 2e-16
-## sexMale:mar_statWidowed                                          0.67602
-##                                                                    
-## (Intercept)                                                     ***
-## age_grp25-29                                                    *  
-## age_grp30-34                                                    ***
-## age_grp35-39                                                    ***
-## age_grp40-44                                                    ***
-## age_grp45-49                                                    ***
-## age_grp50-54                                                    ***
-## age_grp55-59                                                    ***
-## age_grp60-64                                                    ***
-## age_grp65-69                                                    ***
-## age_grp70-74                                                    ***
-## age_grp75-79                                                    ***
-## age_grp80-84                                                    ***
-## age_grp85-89                                                    ***
-## age_grp90 plus                                                  ***
-## sexMale                                                         ***
-## ab_id_dichotAboriginal ID                                       ***
-## adl_difficultyNot stated                                        ***
-## adl_difficultyOften                                             ***
-## adl_difficultySometimes                                         ***
-## worker_classPaid worker,no help                                 .  
-## worker_classPaid worker,paid help                               .  
-## worker_classPaid Worker                                         *  
-## worker_classSelf-employed,no help                                  
-## worker_classSelf-employed,paid help                             *  
-## worker_classNot applicable                                      ***
-## vis_minorityChinese                                             ***
-## vis_minoritySouth Asian                                         ***
-## vis_minorityBlack                                               ***
-## vis_minorityFilipino                                            ***
-## vis_minorityLatin American                                      ***
-## vis_minoritySoutheast Asian                                     ***
-## vis_minorityArab                                                ***
-## vis_minorityWest Asian                                          ***
-## vis_minorityKorean                                              ***
-## vis_minorityJapanese                                            ***
-## vis_minorityOther/multiple visible minority                     ***
-## first_langFrench                                                ***
-## first_langEnglish &amp; French                                      ***
-## first_langOther                                                 *  
-## employ_statusPart-time                                          ***
-## employ_statusDidn't work                                        ***
-## generation1st Generation                                        ***
-## generation2nd Generation                                        ***
-## educationNone                                                   ***
-## educationTrades Cert/Dip                                        ** 
-## educationApprenticeship Cert/Dip                                ***
-## educationNon-Uni Cert/Dip &lt; 1 year                              ***
-## educationNon-Uni Cert/Dip 1-2 years                             ***
-## educationNon-Uni Cert/Dip &gt; 2years                              ***
-## educationUni Cert/Dip below Bachelor's                          ***
-## educationBachelor's degree                                      ***
-## educationUni Cert/Dip above Bachelor's                          ***
-## educationMedicine etc.                                             
-## educationMaster's degree                                        ***
-## educationDoctorate                                              *  
-## loinc_decile1 - lowest                                          ***
-## loinc_decile2                                                   ***
-## loinc_decile3                                                   ***
-## loinc_decile4                                                   ***
-## loinc_decile5                                                   ***
-## loinc_decile6                                                   ***
-## loinc_decile7                                                   ***
-## loinc_decile8                                                   ***
-## loinc_decile9                                                   ** 
-## rur_urbRural                                                    ***
-## provinceNewfoundland and Labrador                               ** 
-## provincePrince Edward Island                                    ***
-## provinceNova Scotia                                             .  
-## provinceNew Brunswick                                              
-## provinceQuebec                                                  ***
-## provinceManitoba                                                ***
-## provinceSaskatchewan                                            ***
-## provinceAlberta                                                 *  
-## provinceBritish Columbia                                        ***
-## provinceYukon                                                   ***
-## provinceNorthwest Territories                                      
-## provinceNunavut                                                 ***
-## mar_statDivorced                                                ***
-## mar_statSeparated                                               ***
-## mar_statNever married                                           ***
-## mar_statWidowed                                                 ***
-## no_kids1 or 2                                                   ***
-## no_kids3 or more                                                ***
-## generation1st Generation:educationNone                          ***
-## generation2nd Generation:educationNone                             
-## generation1st Generation:educationTrades Cert/Dip                  
-## generation2nd Generation:educationTrades Cert/Dip                  
-## generation1st Generation:educationApprenticeship Cert/Dip          
-## generation2nd Generation:educationApprenticeship Cert/Dip          
-## generation1st Generation:educationNon-Uni Cert/Dip &lt; 1 year        
-## generation2nd Generation:educationNon-Uni Cert/Dip &lt; 1 year        
-## generation1st Generation:educationNon-Uni Cert/Dip 1-2 years       
-## generation2nd Generation:educationNon-Uni Cert/Dip 1-2 years       
-## generation1st Generation:educationNon-Uni Cert/Dip &gt; 2years        
-## generation2nd Generation:educationNon-Uni Cert/Dip &gt; 2years        
-## generation1st Generation:educationUni Cert/Dip below Bachelor's    
-## generation2nd Generation:educationUni Cert/Dip below Bachelor's    
-## generation1st Generation:educationBachelor's degree             .  
-## generation2nd Generation:educationBachelor's degree                
-## generation1st Generation:educationUni Cert/Dip above Bachelor's    
-## generation2nd Generation:educationUni Cert/Dip above Bachelor's    
-## generation1st Generation:educationMedicine etc.                    
-## generation2nd Generation:educationMedicine etc.                    
-## generation1st Generation:educationMaster's degree                  
-## generation2nd Generation:educationMaster's degree                  
-## generation1st Generation:educationDoctorate                        
-## generation2nd Generation:educationDoctorate                        
-## sexMale:mar_statDivorced                                        ***
-## sexMale:mar_statSeparated                                          
-## sexMale:mar_statNever married                                   ***
-## sexMale:mar_statWidowed                                            
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 1189342  on 2173323  degrees of freedom
-## Residual deviance:  838282  on 2173212  degrees of freedom
-## AIC: 838506
-## 
-## Number of Fisher Scoring iterations: 7</code></pre>
 <pre class="r"><code>anova(expglm, interactionglm, test = &quot;Chi&quot;)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Resid. Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Resid. Dev"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Deviance"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Pr(>Chi)"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2173240","2":"838833","3":"NA","4":"NA","5":"NA","_rn_":"1"},{"1":"2173212","2":"838282","3":"28","4":"551","5":"1.85e-98","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
 <pre class="r"><code>expglm_df &lt;- tidy(expglm) %&gt;%
               bind_cols(tibble(or=exp(coef(expglm)))) %&gt;%
               bind_cols(as.data.frame(exp(confint.default(expglm)))) %&gt;%
@@ -952,7 +302,7 @@ kable(expglm_df)</code></pre>
 <th align="right">estimate</th>
 <th align="right">std.error</th>
 <th align="right">statistic</th>
-<th align="right">p.value</th>
+<th align="left">p.value</th>
 <th align="right">or</th>
 <th align="right">ci95_lower</th>
 <th align="right">ci95_upper</th>
@@ -961,843 +311,583 @@ kable(expglm_df)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-5.285</td>
-<td align="right">0.084</td>
-<td align="right">-62.76</td>
-<td align="right">0.000</td>
-<td align="right">0.005</td>
-<td align="right">0.004</td>
-<td align="right">0.006</td>
+<td align="right">-5.993</td>
+<td align="right">0.022</td>
+<td align="right">-271.04</td>
+<td align="left">0.00e+00</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.003</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp25-29</td>
-<td align="right">0.092</td>
-<td align="right">0.038</td>
-<td align="right">2.39</td>
-<td align="right">0.017</td>
-<td align="right">1.096</td>
-<td align="right">1.016</td>
-<td align="right">1.182</td>
+<td align="right">0.114</td>
+<td align="right">0.027</td>
+<td align="right">4.17</td>
+<td align="left">2.99e-05</td>
+<td align="right">1.121</td>
+<td align="right">1.063</td>
+<td align="right">1.183</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp30-34</td>
-<td align="right">0.172</td>
-<td align="right">0.038</td>
-<td align="right">4.55</td>
-<td align="right">0.000</td>
-<td align="right">1.188</td>
-<td align="right">1.103</td>
-<td align="right">1.279</td>
+<td align="right">0.241</td>
+<td align="right">0.027</td>
+<td align="right">9.04</td>
+<td align="left">1.55e-19</td>
+<td align="right">1.272</td>
+<td align="right">1.208</td>
+<td align="right">1.341</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp35-39</td>
-<td align="right">0.582</td>
-<td align="right">0.034</td>
-<td align="right">16.93</td>
-<td align="right">0.000</td>
-<td align="right">1.789</td>
-<td align="right">1.673</td>
-<td align="right">1.914</td>
+<td align="right">0.684</td>
+<td align="right">0.024</td>
+<td align="right">28.05</td>
+<td align="left">3.58e-173</td>
+<td align="right">1.982</td>
+<td align="right">1.890</td>
+<td align="right">2.079</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp40-44</td>
-<td align="right">0.962</td>
-<td align="right">0.032</td>
-<td align="right">30.24</td>
-<td align="right">0.000</td>
-<td align="right">2.617</td>
-<td align="right">2.459</td>
-<td align="right">2.786</td>
+<td align="right">1.141</td>
+<td align="right">0.022</td>
+<td align="right">50.70</td>
+<td align="left">0.00e+00</td>
+<td align="right">3.129</td>
+<td align="right">2.994</td>
+<td align="right">3.270</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp45-49</td>
-<td align="right">1.448</td>
-<td align="right">0.030</td>
-<td align="right">47.85</td>
-<td align="right">0.000</td>
-<td align="right">4.256</td>
-<td align="right">4.011</td>
-<td align="right">4.516</td>
+<td align="right">1.704</td>
+<td align="right">0.021</td>
+<td align="right">79.62</td>
+<td align="left">0.00e+00</td>
+<td align="right">5.498</td>
+<td align="right">5.272</td>
+<td align="right">5.734</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp50-54</td>
-<td align="right">1.538</td>
-<td align="right">0.030</td>
-<td align="right">50.69</td>
-<td align="right">0.000</td>
-<td align="right">4.656</td>
-<td align="right">4.387</td>
-<td align="right">4.941</td>
+<td align="right">1.835</td>
+<td align="right">0.021</td>
+<td align="right">85.73</td>
+<td align="left">0.00e+00</td>
+<td align="right">6.268</td>
+<td align="right">6.011</td>
+<td align="right">6.537</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp55-59</td>
-<td align="right">2.162</td>
-<td align="right">0.030</td>
-<td align="right">72.99</td>
-<td align="right">0.000</td>
-<td align="right">8.684</td>
-<td align="right">8.195</td>
-<td align="right">9.203</td>
+<td align="right">2.524</td>
+<td align="right">0.021</td>
+<td align="right">121.50</td>
+<td align="left">0.00e+00</td>
+<td align="right">12.478</td>
+<td align="right">11.980</td>
+<td align="right">12.996</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp60-64</td>
-<td align="right">2.548</td>
-<td align="right">0.030</td>
-<td align="right">85.88</td>
-<td align="right">0.000</td>
-<td align="right">12.786</td>
-<td align="right">12.063</td>
-<td align="right">13.551</td>
+<td align="right">2.963</td>
+<td align="right">0.021</td>
+<td align="right">143.12</td>
+<td align="left">0.00e+00</td>
+<td align="right">19.351</td>
+<td align="right">18.582</td>
+<td align="right">20.152</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp65-69</td>
-<td align="right">2.569</td>
-<td align="right">0.030</td>
-<td align="right">85.85</td>
-<td align="right">0.000</td>
-<td align="right">13.052</td>
-<td align="right">12.309</td>
-<td align="right">13.840</td>
+<td align="right">2.984</td>
+<td align="right">0.021</td>
+<td align="right">143.03</td>
+<td align="left">0.00e+00</td>
+<td align="right">19.758</td>
+<td align="right">18.966</td>
+<td align="right">20.582</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp70-74</td>
-<td align="right">2.676</td>
-<td align="right">0.030</td>
-<td align="right">89.03</td>
-<td align="right">0.000</td>
-<td align="right">14.526</td>
-<td align="right">13.695</td>
-<td align="right">15.408</td>
+<td align="right">3.093</td>
+<td align="right">0.021</td>
+<td align="right">147.67</td>
+<td align="left">0.00e+00</td>
+<td align="right">22.034</td>
+<td align="right">21.148</td>
+<td align="right">22.957</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp75-79</td>
-<td align="right">2.852</td>
-<td align="right">0.030</td>
-<td align="right">94.40</td>
-<td align="right">0.000</td>
-<td align="right">17.321</td>
-<td align="right">16.325</td>
-<td align="right">18.377</td>
+<td align="right">3.294</td>
+<td align="right">0.021</td>
+<td align="right">156.59</td>
+<td align="left">0.00e+00</td>
+<td align="right">26.946</td>
+<td align="right">25.857</td>
+<td align="right">28.080</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp80-84</td>
-<td align="right">3.089</td>
-<td align="right">0.031</td>
-<td align="right">100.82</td>
-<td align="right">0.000</td>
-<td align="right">21.959</td>
-<td align="right">20.679</td>
-<td align="right">23.318</td>
+<td align="right">3.561</td>
+<td align="right">0.021</td>
+<td align="right">167.03</td>
+<td align="left">0.00e+00</td>
+<td align="right">35.183</td>
+<td align="right">33.744</td>
+<td align="right">36.684</td>
 </tr>
 <tr class="even">
 <td align="left">age_grp85-89</td>
-<td align="right">3.394</td>
-<td align="right">0.032</td>
-<td align="right">105.48</td>
-<td align="right">0.000</td>
-<td align="right">29.774</td>
-<td align="right">27.955</td>
-<td align="right">31.712</td>
+<td align="right">3.910</td>
+<td align="right">0.022</td>
+<td align="right">175.20</td>
+<td align="left">0.00e+00</td>
+<td align="right">49.909</td>
+<td align="right">47.773</td>
+<td align="right">52.141</td>
 </tr>
 <tr class="odd">
 <td align="left">age_grp90 plus</td>
-<td align="right">3.620</td>
-<td align="right">0.036</td>
-<td align="right">99.76</td>
-<td align="right">0.000</td>
-<td align="right">37.327</td>
-<td align="right">34.765</td>
-<td align="right">40.078</td>
+<td align="right">4.192</td>
+<td align="right">0.025</td>
+<td align="right">167.34</td>
+<td align="left">0.00e+00</td>
+<td align="right">66.181</td>
+<td align="right">63.010</td>
+<td align="right">69.512</td>
 </tr>
 <tr class="even">
 <td align="left">sexMale</td>
-<td align="right">0.650</td>
-<td align="right">0.006</td>
-<td align="right">103.35</td>
-<td align="right">0.000</td>
-<td align="right">1.916</td>
-<td align="right">1.893</td>
-<td align="right">1.940</td>
-</tr>
-<tr class="odd">
-<td align="left">ab_id_dichotAboriginal ID</td>
-<td align="right">-0.222</td>
-<td align="right">0.014</td>
-<td align="right">-15.45</td>
-<td align="right">0.000</td>
-<td align="right">0.801</td>
-<td align="right">0.778</td>
-<td align="right">0.824</td>
-</tr>
-<tr class="even">
-<td align="left">adl_difficultyNot stated</td>
-<td align="right">0.804</td>
-<td align="right">0.019</td>
-<td align="right">41.58</td>
-<td align="right">0.000</td>
-<td align="right">2.234</td>
-<td align="right">2.151</td>
-<td align="right">2.320</td>
-</tr>
-<tr class="odd">
-<td align="left">adl_difficultyOften</td>
-<td align="right">1.222</td>
-<td align="right">0.008</td>
-<td align="right">155.89</td>
-<td align="right">0.000</td>
-<td align="right">3.394</td>
-<td align="right">3.342</td>
-<td align="right">3.447</td>
-</tr>
-<tr class="even">
-<td align="left">adl_difficultySometimes</td>
-<td align="right">0.707</td>
-<td align="right">0.008</td>
-<td align="right">94.08</td>
-<td align="right">0.000</td>
-<td align="right">2.028</td>
-<td align="right">1.998</td>
-<td align="right">2.058</td>
-</tr>
-<tr class="odd">
-<td align="left">worker_classPaid worker,no help</td>
-<td align="right">-0.127</td>
-<td align="right">0.082</td>
-<td align="right">-1.55</td>
-<td align="right">0.121</td>
-<td align="right">0.880</td>
-<td align="right">0.750</td>
-<td align="right">1.034</td>
-</tr>
-<tr class="even">
-<td align="left">worker_classPaid worker,paid help</td>
-<td align="right">-0.132</td>
-<td align="right">0.081</td>
-<td align="right">-1.63</td>
-<td align="right">0.104</td>
-<td align="right">0.876</td>
-<td align="right">0.747</td>
-<td align="right">1.027</td>
-</tr>
-<tr class="odd">
-<td align="left">worker_classPaid Worker</td>
-<td align="right">-0.168</td>
-<td align="right">0.077</td>
-<td align="right">-2.19</td>
-<td align="right">0.029</td>
-<td align="right">0.845</td>
-<td align="right">0.727</td>
-<td align="right">0.983</td>
-</tr>
-<tr class="even">
-<td align="left">worker_classSelf-employed,no help</td>
-<td align="right">-0.092</td>
-<td align="right">0.078</td>
-<td align="right">-1.18</td>
-<td align="right">0.238</td>
-<td align="right">0.912</td>
-<td align="right">0.782</td>
-<td align="right">1.063</td>
-</tr>
-<tr class="odd">
-<td align="left">worker_classSelf-employed,paid help</td>
-<td align="right">-0.164</td>
-<td align="right">0.082</td>
-<td align="right">-2.01</td>
-<td align="right">0.044</td>
-<td align="right">0.848</td>
-<td align="right">0.723</td>
-<td align="right">0.996</td>
-</tr>
-<tr class="even">
-<td align="left">worker_classNot applicable</td>
-<td align="right">0.383</td>
-<td align="right">0.081</td>
-<td align="right">4.75</td>
-<td align="right">0.000</td>
-<td align="right">1.467</td>
-<td align="right">1.253</td>
-<td align="right">1.719</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityChinese</td>
-<td align="right">-0.532</td>
-<td align="right">0.024</td>
-<td align="right">-22.46</td>
-<td align="right">0.000</td>
-<td align="right">0.587</td>
-<td align="right">0.561</td>
-<td align="right">0.615</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minoritySouth Asian</td>
-<td align="right">-0.523</td>
-<td align="right">0.027</td>
-<td align="right">-19.37</td>
-<td align="right">0.000</td>
-<td align="right">0.592</td>
-<td align="right">0.562</td>
-<td align="right">0.625</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityBlack</td>
-<td align="right">-0.313</td>
-<td align="right">0.030</td>
-<td align="right">-10.59</td>
-<td align="right">0.000</td>
-<td align="right">0.731</td>
-<td align="right">0.690</td>
-<td align="right">0.775</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minorityFilipino</td>
-<td align="right">-0.394</td>
-<td align="right">0.041</td>
-<td align="right">-9.54</td>
-<td align="right">0.000</td>
-<td align="right">0.674</td>
-<td align="right">0.622</td>
-<td align="right">0.731</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityLatin American</td>
-<td align="right">-0.682</td>
-<td align="right">0.055</td>
-<td align="right">-12.30</td>
-<td align="right">0.000</td>
-<td align="right">0.505</td>
-<td align="right">0.453</td>
-<td align="right">0.564</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minoritySoutheast Asian</td>
-<td align="right">-0.429</td>
-<td align="right">0.056</td>
-<td align="right">-7.70</td>
-<td align="right">0.000</td>
-<td align="right">0.651</td>
-<td align="right">0.584</td>
-<td align="right">0.726</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityArab</td>
-<td align="right">-0.410</td>
-<td align="right">0.054</td>
-<td align="right">-7.54</td>
-<td align="right">0.000</td>
-<td align="right">0.664</td>
-<td align="right">0.596</td>
-<td align="right">0.738</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minorityWest Asian</td>
-<td align="right">-0.658</td>
-<td align="right">0.076</td>
-<td align="right">-8.61</td>
-<td align="right">0.000</td>
-<td align="right">0.518</td>
-<td align="right">0.446</td>
-<td align="right">0.601</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityKorean</td>
-<td align="right">-0.653</td>
-<td align="right">0.084</td>
-<td align="right">-7.77</td>
-<td align="right">0.000</td>
-<td align="right">0.520</td>
-<td align="right">0.441</td>
-<td align="right">0.614</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minorityJapanese</td>
-<td align="right">-0.239</td>
-<td align="right">0.067</td>
-<td align="right">-3.55</td>
-<td align="right">0.000</td>
-<td align="right">0.787</td>
-<td align="right">0.690</td>
-<td align="right">0.898</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityOther/multiple visible minority</td>
-<td align="right">-0.662</td>
-<td align="right">0.067</td>
-<td align="right">-9.91</td>
-<td align="right">0.000</td>
-<td align="right">0.516</td>
-<td align="right">0.453</td>
-<td align="right">0.588</td>
-</tr>
-<tr class="even">
-<td align="left">first_langFrench</td>
-<td align="right">-0.149</td>
-<td align="right">0.012</td>
-<td align="right">-12.47</td>
-<td align="right">0.000</td>
-<td align="right">0.861</td>
-<td align="right">0.841</td>
-<td align="right">0.882</td>
-</tr>
-<tr class="odd">
-<td align="left">first_langEnglish &amp; French</td>
-<td align="right">-0.162</td>
-<td align="right">0.038</td>
-<td align="right">-4.25</td>
-<td align="right">0.000</td>
-<td align="right">0.851</td>
-<td align="right">0.789</td>
-<td align="right">0.917</td>
-</tr>
-<tr class="even">
-<td align="left">first_langOther</td>
-<td align="right">-0.080</td>
-<td align="right">0.019</td>
-<td align="right">-4.12</td>
-<td align="right">0.000</td>
-<td align="right">0.923</td>
-<td align="right">0.888</td>
-<td align="right">0.959</td>
+<td align="right">0.681</td>
+<td align="right">0.004</td>
+<td align="right">156.21</td>
+<td align="left">0.00e+00</td>
+<td align="right">1.975</td>
+<td align="right">1.959</td>
+<td align="right">1.992</td>
 </tr>
 <tr class="odd">
 <td align="left">employ_statusPart-time</td>
-<td align="right">0.154</td>
-<td align="right">0.013</td>
-<td align="right">12.00</td>
-<td align="right">0.000</td>
-<td align="right">1.167</td>
-<td align="right">1.138</td>
-<td align="right">1.197</td>
+<td align="right">0.225</td>
+<td align="right">0.009</td>
+<td align="right">25.20</td>
+<td align="left">3.61e-140</td>
+<td align="right">1.252</td>
+<td align="right">1.231</td>
+<td align="right">1.275</td>
 </tr>
 <tr class="even">
 <td align="left">employ_statusDidn’t work</td>
-<td align="right">0.402</td>
-<td align="right">0.028</td>
-<td align="right">14.55</td>
-<td align="right">0.000</td>
-<td align="right">1.495</td>
-<td align="right">1.417</td>
-<td align="right">1.579</td>
+<td align="right">1.166</td>
+<td align="right">0.006</td>
+<td align="right">197.98</td>
+<td align="left">0.00e+00</td>
+<td align="right">3.210</td>
+<td align="right">3.173</td>
+<td align="right">3.247</td>
 </tr>
 <tr class="odd">
 <td align="left">generation1st Generation</td>
-<td align="right">-0.098</td>
-<td align="right">0.009</td>
-<td align="right">-11.43</td>
-<td align="right">0.000</td>
-<td align="right">0.906</td>
-<td align="right">0.891</td>
-<td align="right">0.922</td>
+<td align="right">-0.262</td>
+<td align="right">0.005</td>
+<td align="right">-48.95</td>
+<td align="left">0.00e+00</td>
+<td align="right">0.769</td>
+<td align="right">0.761</td>
+<td align="right">0.777</td>
 </tr>
 <tr class="even">
 <td align="left">generation2nd Generation</td>
-<td align="right">0.088</td>
-<td align="right">0.008</td>
-<td align="right">10.45</td>
-<td align="right">0.000</td>
-<td align="right">1.092</td>
-<td align="right">1.074</td>
-<td align="right">1.110</td>
+<td align="right">0.099</td>
+<td align="right">0.006</td>
+<td align="right">17.23</td>
+<td align="left">1.63e-66</td>
+<td align="right">1.104</td>
+<td align="right">1.091</td>
+<td align="right">1.116</td>
 </tr>
 <tr class="odd">
 <td align="left">educationNone</td>
-<td align="right">0.112</td>
-<td align="right">0.008</td>
-<td align="right">14.21</td>
-<td align="right">0.000</td>
-<td align="right">1.119</td>
-<td align="right">1.101</td>
-<td align="right">1.136</td>
+<td align="right">0.191</td>
+<td align="right">0.005</td>
+<td align="right">35.31</td>
+<td align="left">4.60e-273</td>
+<td align="right">1.211</td>
+<td align="right">1.198</td>
+<td align="right">1.224</td>
 </tr>
 <tr class="even">
 <td align="left">educationTrades Cert/Dip</td>
-<td align="right">-0.034</td>
-<td align="right">0.012</td>
-<td align="right">-2.77</td>
-<td align="right">0.006</td>
-<td align="right">0.967</td>
-<td align="right">0.944</td>
-<td align="right">0.990</td>
+<td align="right">0.041</td>
+<td align="right">0.008</td>
+<td align="right">4.91</td>
+<td align="left">9.30e-07</td>
+<td align="right">1.042</td>
+<td align="right">1.025</td>
+<td align="right">1.060</td>
 </tr>
 <tr class="odd">
 <td align="left">educationApprenticeship Cert/Dip</td>
-<td align="right">-0.065</td>
-<td align="right">0.015</td>
-<td align="right">-4.46</td>
-<td align="right">0.000</td>
-<td align="right">0.937</td>
-<td align="right">0.911</td>
-<td align="right">0.964</td>
+<td align="right">0.006</td>
+<td align="right">0.010</td>
+<td align="right">0.59</td>
+<td align="left">5.55e-01</td>
+<td align="right">1.006</td>
+<td align="right">0.986</td>
+<td align="right">1.026</td>
 </tr>
 <tr class="even">
 <td align="left">educationNon-Uni Cert/Dip &lt; 1 year</td>
-<td align="right">-0.082</td>
-<td align="right">0.021</td>
-<td align="right">-3.85</td>
-<td align="right">0.000</td>
-<td align="right">0.921</td>
-<td align="right">0.884</td>
-<td align="right">0.960</td>
+<td align="right">-0.077</td>
+<td align="right">0.015</td>
+<td align="right">-5.13</td>
+<td align="left">2.85e-07</td>
+<td align="right">0.926</td>
+<td align="right">0.899</td>
+<td align="right">0.954</td>
 </tr>
 <tr class="odd">
 <td align="left">educationNon-Uni Cert/Dip 1-2 years</td>
-<td align="right">-0.201</td>
-<td align="right">0.014</td>
-<td align="right">-14.57</td>
-<td align="right">0.000</td>
-<td align="right">0.818</td>
-<td align="right">0.796</td>
-<td align="right">0.840</td>
+<td align="right">-0.162</td>
+<td align="right">0.010</td>
+<td align="right">-16.93</td>
+<td align="left">2.63e-64</td>
+<td align="right">0.850</td>
+<td align="right">0.835</td>
+<td align="right">0.867</td>
 </tr>
 <tr class="even">
 <td align="left">educationNon-Uni Cert/Dip &gt; 2years</td>
-<td align="right">-0.187</td>
-<td align="right">0.014</td>
-<td align="right">-13.11</td>
-<td align="right">0.000</td>
-<td align="right">0.829</td>
-<td align="right">0.806</td>
-<td align="right">0.853</td>
+<td align="right">-0.162</td>
+<td align="right">0.010</td>
+<td align="right">-16.30</td>
+<td align="left">1.07e-59</td>
+<td align="right">0.851</td>
+<td align="right">0.834</td>
+<td align="right">0.867</td>
 </tr>
 <tr class="odd">
 <td align="left">educationUni Cert/Dip below Bachelor’s</td>
-<td align="right">-0.107</td>
-<td align="right">0.016</td>
-<td align="right">-6.90</td>
-<td align="right">0.000</td>
-<td align="right">0.898</td>
-<td align="right">0.871</td>
-<td align="right">0.926</td>
+<td align="right">-0.137</td>
+<td align="right">0.011</td>
+<td align="right">-12.66</td>
+<td align="left">1.00e-36</td>
+<td align="right">0.872</td>
+<td align="right">0.854</td>
+<td align="right">0.891</td>
 </tr>
 <tr class="even">
 <td align="left">educationBachelor’s degree</td>
-<td align="right">-0.317</td>
-<td align="right">0.014</td>
-<td align="right">-23.27</td>
-<td align="right">0.000</td>
-<td align="right">0.728</td>
-<td align="right">0.709</td>
-<td align="right">0.748</td>
+<td align="right">-0.368</td>
+<td align="right">0.009</td>
+<td align="right">-38.94</td>
+<td align="left">0.00e+00</td>
+<td align="right">0.692</td>
+<td align="right">0.679</td>
+<td align="right">0.705</td>
 </tr>
 <tr class="odd">
 <td align="left">educationUni Cert/Dip above Bachelor’s</td>
-<td align="right">-0.226</td>
-<td align="right">0.025</td>
-<td align="right">-8.92</td>
-<td align="right">0.000</td>
-<td align="right">0.798</td>
-<td align="right">0.759</td>
-<td align="right">0.838</td>
+<td align="right">-0.249</td>
+<td align="right">0.018</td>
+<td align="right">-14.07</td>
+<td align="left">6.17e-45</td>
+<td align="right">0.780</td>
+<td align="right">0.753</td>
+<td align="right">0.807</td>
 </tr>
 <tr class="even">
 <td align="left">educationMedicine etc.</td>
-<td align="right">-0.087</td>
-<td align="right">0.046</td>
-<td align="right">-1.90</td>
-<td align="right">0.058</td>
-<td align="right">0.917</td>
-<td align="right">0.838</td>
-<td align="right">1.003</td>
+<td align="right">-0.101</td>
+<td align="right">0.031</td>
+<td align="right">-3.21</td>
+<td align="left">1.35e-03</td>
+<td align="right">0.904</td>
+<td align="right">0.850</td>
+<td align="right">0.962</td>
 </tr>
 <tr class="odd">
 <td align="left">educationMaster’s degree</td>
-<td align="right">-0.385</td>
-<td align="right">0.021</td>
-<td align="right">-18.06</td>
-<td align="right">0.000</td>
-<td align="right">0.680</td>
-<td align="right">0.652</td>
-<td align="right">0.709</td>
+<td align="right">-0.443</td>
+<td align="right">0.015</td>
+<td align="right">-29.53</td>
+<td align="left">1.10e-191</td>
+<td align="right">0.642</td>
+<td align="right">0.624</td>
+<td align="right">0.661</td>
 </tr>
 <tr class="even">
 <td align="left">educationDoctorate</td>
-<td align="right">-0.155</td>
-<td align="right">0.036</td>
-<td align="right">-4.27</td>
-<td align="right">0.000</td>
-<td align="right">0.857</td>
-<td align="right">0.798</td>
-<td align="right">0.920</td>
+<td align="right">-0.166</td>
+<td align="right">0.025</td>
+<td align="right">-6.63</td>
+<td align="left">3.40e-11</td>
+<td align="right">0.847</td>
+<td align="right">0.807</td>
+<td align="right">0.890</td>
 </tr>
 <tr class="odd">
 <td align="left">loinc_decile1 - lowest</td>
-<td align="right">0.275</td>
-<td align="right">0.018</td>
-<td align="right">15.11</td>
-<td align="right">0.000</td>
-<td align="right">1.317</td>
-<td align="right">1.271</td>
-<td align="right">1.365</td>
+<td align="right">0.391</td>
+<td align="right">0.013</td>
+<td align="right">31.19</td>
+<td align="left">1.49e-213</td>
+<td align="right">1.478</td>
+<td align="right">1.442</td>
+<td align="right">1.515</td>
 </tr>
 <tr class="even">
 <td align="left">loinc_decile2</td>
-<td align="right">0.269</td>
-<td align="right">0.014</td>
-<td align="right">18.79</td>
-<td align="right">0.000</td>
-<td align="right">1.309</td>
-<td align="right">1.272</td>
-<td align="right">1.346</td>
+<td align="right">0.393</td>
+<td align="right">0.010</td>
+<td align="right">39.92</td>
+<td align="left">0.00e+00</td>
+<td align="right">1.482</td>
+<td align="right">1.454</td>
+<td align="right">1.511</td>
 </tr>
 <tr class="odd">
 <td align="left">loinc_decile3</td>
-<td align="right">0.346</td>
-<td align="right">0.014</td>
-<td align="right">25.28</td>
-<td align="right">0.000</td>
-<td align="right">1.414</td>
-<td align="right">1.376</td>
-<td align="right">1.452</td>
+<td align="right">0.421</td>
+<td align="right">0.009</td>
+<td align="right">44.44</td>
+<td align="left">0.00e+00</td>
+<td align="right">1.523</td>
+<td align="right">1.495</td>
+<td align="right">1.552</td>
 </tr>
 <tr class="even">
 <td align="left">loinc_decile4</td>
-<td align="right">0.272</td>
-<td align="right">0.014</td>
-<td align="right">19.67</td>
-<td align="right">0.000</td>
-<td align="right">1.312</td>
-<td align="right">1.277</td>
-<td align="right">1.348</td>
+<td align="right">0.331</td>
+<td align="right">0.010</td>
+<td align="right">34.59</td>
+<td align="left">3.38e-262</td>
+<td align="right">1.393</td>
+<td align="right">1.367</td>
+<td align="right">1.419</td>
 </tr>
 <tr class="odd">
 <td align="left">loinc_decile5</td>
-<td align="right">0.211</td>
-<td align="right">0.014</td>
-<td align="right">15.07</td>
-<td align="right">0.000</td>
-<td align="right">1.235</td>
-<td align="right">1.201</td>
-<td align="right">1.269</td>
+<td align="right">0.239</td>
+<td align="right">0.010</td>
+<td align="right">24.56</td>
+<td align="left">3.36e-133</td>
+<td align="right">1.270</td>
+<td align="right">1.246</td>
+<td align="right">1.295</td>
 </tr>
 <tr class="even">
 <td align="left">loinc_decile6</td>
-<td align="right">0.144</td>
-<td align="right">0.014</td>
-<td align="right">10.12</td>
-<td align="right">0.000</td>
-<td align="right">1.155</td>
-<td align="right">1.123</td>
-<td align="right">1.188</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile7</td>
-<td align="right">0.107</td>
-<td align="right">0.014</td>
-<td align="right">7.43</td>
-<td align="right">0.000</td>
-<td align="right">1.113</td>
-<td align="right">1.082</td>
-<td align="right">1.145</td>
-</tr>
-<tr class="even">
-<td align="left">loinc_decile8</td>
-<td align="right">0.079</td>
-<td align="right">0.015</td>
-<td align="right">5.38</td>
-<td align="right">0.000</td>
-<td align="right">1.082</td>
-<td align="right">1.051</td>
-<td align="right">1.113</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile9</td>
-<td align="right">0.048</td>
-<td align="right">0.015</td>
-<td align="right">3.27</td>
-<td align="right">0.001</td>
-<td align="right">1.050</td>
-<td align="right">1.020</td>
-<td align="right">1.080</td>
-</tr>
-<tr class="even">
-<td align="left">rur_urbRural</td>
-<td align="right">-0.060</td>
-<td align="right">0.007</td>
-<td align="right">-8.24</td>
-<td align="right">0.000</td>
-<td align="right">0.942</td>
-<td align="right">0.929</td>
-<td align="right">0.955</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceNewfoundland and Labrador</td>
-<td align="right">-0.057</td>
-<td align="right">0.022</td>
-<td align="right">-2.54</td>
-<td align="right">0.011</td>
-<td align="right">0.945</td>
-<td align="right">0.905</td>
-<td align="right">0.987</td>
-</tr>
-<tr class="even">
-<td align="left">provincePrince Edward Island</td>
-<td align="right">0.142</td>
-<td align="right">0.042</td>
-<td align="right">3.41</td>
-<td align="right">0.001</td>
-<td align="right">1.153</td>
-<td align="right">1.062</td>
-<td align="right">1.251</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceNova Scotia</td>
-<td align="right">-0.025</td>
-<td align="right">0.017</td>
-<td align="right">-1.52</td>
-<td align="right">0.130</td>
-<td align="right">0.975</td>
-<td align="right">0.944</td>
-<td align="right">1.007</td>
-</tr>
-<tr class="even">
-<td align="left">provinceNew Brunswick</td>
-<td align="right">-0.021</td>
-<td align="right">0.019</td>
-<td align="right">-1.10</td>
-<td align="right">0.272</td>
-<td align="right">0.979</td>
-<td align="right">0.944</td>
-<td align="right">1.016</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceQuebec</td>
-<td align="right">0.145</td>
-<td align="right">0.012</td>
-<td align="right">11.98</td>
-<td align="right">0.000</td>
-<td align="right">1.157</td>
-<td align="right">1.129</td>
-<td align="right">1.184</td>
-</tr>
-<tr class="even">
-<td align="left">provinceManitoba</td>
-<td align="right">0.074</td>
-<td align="right">0.015</td>
-<td align="right">5.01</td>
-<td align="right">0.000</td>
-<td align="right">1.077</td>
-<td align="right">1.046</td>
-<td align="right">1.109</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceSaskatchewan</td>
-<td align="right">0.065</td>
-<td align="right">0.016</td>
-<td align="right">4.11</td>
-<td align="right">0.000</td>
-<td align="right">1.067</td>
-<td align="right">1.035</td>
-<td align="right">1.101</td>
-</tr>
-<tr class="even">
-<td align="left">provinceAlberta</td>
-<td align="right">-0.026</td>
-<td align="right">0.011</td>
-<td align="right">-2.32</td>
-<td align="right">0.020</td>
-<td align="right">0.974</td>
-<td align="right">0.953</td>
-<td align="right">0.996</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceBritish Columbia</td>
-<td align="right">-0.063</td>
-<td align="right">0.009</td>
-<td align="right">-6.65</td>
-<td align="right">0.000</td>
-<td align="right">0.939</td>
-<td align="right">0.922</td>
-<td align="right">0.957</td>
-</tr>
-<tr class="even">
-<td align="left">provinceYukon</td>
-<td align="right">0.234</td>
-<td align="right">0.066</td>
-<td align="right">3.55</td>
-<td align="right">0.000</td>
-<td align="right">1.263</td>
-<td align="right">1.110</td>
-<td align="right">1.437</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceNorthwest Territories</td>
-<td align="right">0.062</td>
-<td align="right">0.056</td>
-<td align="right">1.12</td>
-<td align="right">0.264</td>
-<td align="right">1.064</td>
-<td align="right">0.954</td>
-<td align="right">1.187</td>
-</tr>
-<tr class="even">
-<td align="left">provinceNunavut</td>
-<td align="right">0.411</td>
-<td align="right">0.060</td>
-<td align="right">6.81</td>
-<td align="right">0.000</td>
-<td align="right">1.508</td>
-<td align="right">1.340</td>
-<td align="right">1.698</td>
-</tr>
-<tr class="odd">
-<td align="left">mar_statDivorced</td>
-<td align="right">0.117</td>
+<td align="right">0.164</td>
 <td align="right">0.010</td>
-<td align="right">11.46</td>
-<td align="right">0.000</td>
-<td align="right">1.124</td>
-<td align="right">1.102</td>
-<td align="right">1.146</td>
-</tr>
-<tr class="even">
-<td align="left">mar_statSeparated</td>
-<td align="right">0.149</td>
-<td align="right">0.017</td>
-<td align="right">8.71</td>
-<td align="right">0.000</td>
-<td align="right">1.161</td>
-<td align="right">1.123</td>
+<td align="right">16.55</td>
+<td align="left">1.54e-61</td>
+<td align="right">1.178</td>
+<td align="right">1.156</td>
 <td align="right">1.201</td>
 </tr>
 <tr class="odd">
-<td align="left">mar_statNever married</td>
-<td align="right">0.193</td>
+<td align="left">loinc_decile7</td>
+<td align="right">0.125</td>
 <td align="right">0.010</td>
-<td align="right">19.55</td>
-<td align="right">0.000</td>
-<td align="right">1.212</td>
-<td align="right">1.189</td>
-<td align="right">1.236</td>
+<td align="right">12.44</td>
+<td align="left">1.51e-35</td>
+<td align="right">1.133</td>
+<td align="right">1.111</td>
+<td align="right">1.156</td>
+</tr>
+<tr class="even">
+<td align="left">loinc_decile8</td>
+<td align="right">0.082</td>
+<td align="right">0.010</td>
+<td align="right">8.08</td>
+<td align="left">6.68e-16</td>
+<td align="right">1.086</td>
+<td align="right">1.064</td>
+<td align="right">1.108</td>
+</tr>
+<tr class="odd">
+<td align="left">loinc_decile9</td>
+<td align="right">0.044</td>
+<td align="right">0.010</td>
+<td align="right">4.27</td>
+<td align="left">1.92e-05</td>
+<td align="right">1.045</td>
+<td align="right">1.024</td>
+<td align="right">1.067</td>
+</tr>
+<tr class="even">
+<td align="left">rur_urbRural</td>
+<td align="right">-0.029</td>
+<td align="right">0.005</td>
+<td align="right">-5.85</td>
+<td align="left">4.93e-09</td>
+<td align="right">0.972</td>
+<td align="right">0.962</td>
+<td align="right">0.981</td>
+</tr>
+<tr class="odd">
+<td align="left">provinceNewfoundland and Labrador</td>
+<td align="right">-0.115</td>
+<td align="right">0.015</td>
+<td align="right">-7.45</td>
+<td align="left">9.61e-14</td>
+<td align="right">0.892</td>
+<td align="right">0.865</td>
+<td align="right">0.919</td>
+</tr>
+<tr class="even">
+<td align="left">provincePrince Edward Island</td>
+<td align="right">0.154</td>
+<td align="right">0.029</td>
+<td align="right">5.34</td>
+<td align="left">9.38e-08</td>
+<td align="right">1.166</td>
+<td align="right">1.102</td>
+<td align="right">1.234</td>
+</tr>
+<tr class="odd">
+<td align="left">provinceNova Scotia</td>
+<td align="right">0.016</td>
+<td align="right">0.012</td>
+<td align="right">1.38</td>
+<td align="left">1.66e-01</td>
+<td align="right">1.016</td>
+<td align="right">0.993</td>
+<td align="right">1.039</td>
+</tr>
+<tr class="even">
+<td align="left">provinceNew Brunswick</td>
+<td align="right">-0.087</td>
+<td align="right">0.013</td>
+<td align="right">-6.64</td>
+<td align="left">3.19e-11</td>
+<td align="right">0.917</td>
+<td align="right">0.894</td>
+<td align="right">0.941</td>
+</tr>
+<tr class="odd">
+<td align="left">provinceQuebec</td>
+<td align="right">-0.149</td>
+<td align="right">0.006</td>
+<td align="right">-26.72</td>
+<td align="left">2.52e-157</td>
+<td align="right">0.862</td>
+<td align="right">0.853</td>
+<td align="right">0.871</td>
+</tr>
+<tr class="even">
+<td align="left">provinceManitoba</td>
+<td align="right">0.101</td>
+<td align="right">0.010</td>
+<td align="right">9.99</td>
+<td align="left">1.70e-23</td>
+<td align="right">1.106</td>
+<td align="right">1.085</td>
+<td align="right">1.129</td>
+</tr>
+<tr class="odd">
+<td align="left">provinceSaskatchewan</td>
+<td align="right">0.110</td>
+<td align="right">0.011</td>
+<td align="right">10.11</td>
+<td align="left">4.85e-24</td>
+<td align="right">1.116</td>
+<td align="right">1.093</td>
+<td align="right">1.140</td>
+</tr>
+<tr class="even">
+<td align="left">provinceAlberta</td>
+<td align="right">0.009</td>
+<td align="right">0.008</td>
+<td align="right">1.20</td>
+<td align="left">2.30e-01</td>
+<td align="right">1.009</td>
+<td align="right">0.994</td>
+<td align="right">1.025</td>
+</tr>
+<tr class="odd">
+<td align="left">provinceBritish Columbia</td>
+<td align="right">-0.036</td>
+<td align="right">0.006</td>
+<td align="right">-5.59</td>
+<td align="left">2.27e-08</td>
+<td align="right">0.965</td>
+<td align="right">0.952</td>
+<td align="right">0.977</td>
+</tr>
+<tr class="even">
+<td align="left">provinceYukon</td>
+<td align="right">0.328</td>
+<td align="right">0.046</td>
+<td align="right">7.13</td>
+<td align="left">1.03e-12</td>
+<td align="right">1.388</td>
+<td align="right">1.268</td>
+<td align="right">1.519</td>
+</tr>
+<tr class="odd">
+<td align="left">provinceNorthwest Territories</td>
+<td align="right">0.223</td>
+<td align="right">0.037</td>
+<td align="right">5.96</td>
+<td align="left">2.58e-09</td>
+<td align="right">1.250</td>
+<td align="right">1.161</td>
+<td align="right">1.345</td>
+</tr>
+<tr class="even">
+<td align="left">provinceNunavut</td>
+<td align="right">0.421</td>
+<td align="right">0.042</td>
+<td align="right">10.01</td>
+<td align="left">1.40e-23</td>
+<td align="right">1.523</td>
+<td align="right">1.403</td>
+<td align="right">1.654</td>
+</tr>
+<tr class="odd">
+<td align="left">mar_statDivorced</td>
+<td align="right">0.186</td>
+<td align="right">0.007</td>
+<td align="right">26.35</td>
+<td align="left">4.65e-153</td>
+<td align="right">1.204</td>
+<td align="right">1.188</td>
+<td align="right">1.221</td>
+</tr>
+<tr class="even">
+<td align="left">mar_statSeparated</td>
+<td align="right">0.233</td>
+<td align="right">0.012</td>
+<td align="right">19.74</td>
+<td align="left">9.72e-87</td>
+<td align="right">1.263</td>
+<td align="right">1.234</td>
+<td align="right">1.292</td>
+</tr>
+<tr class="odd">
+<td align="left">mar_statNever married</td>
+<td align="right">0.283</td>
+<td align="right">0.007</td>
+<td align="right">41.82</td>
+<td align="left">0.00e+00</td>
+<td align="right">1.328</td>
+<td align="right">1.310</td>
+<td align="right">1.345</td>
 </tr>
 <tr class="even">
 <td align="left">mar_statWidowed</td>
-<td align="right">0.659</td>
-<td align="right">0.008</td>
-<td align="right">79.47</td>
-<td align="right">0.000</td>
-<td align="right">1.933</td>
-<td align="right">1.902</td>
-<td align="right">1.965</td>
-</tr>
-<tr class="odd">
-<td align="left">no_kids1 or 2</td>
-<td align="right">-0.179</td>
-<td align="right">0.008</td>
-<td align="right">-22.88</td>
-<td align="right">0.000</td>
-<td align="right">0.836</td>
-<td align="right">0.823</td>
-<td align="right">0.849</td>
-</tr>
-<tr class="even">
-<td align="left">no_kids3 or more</td>
-<td align="right">-0.371</td>
-<td align="right">0.019</td>
-<td align="right">-19.20</td>
-<td align="right">0.000</td>
-<td align="right">0.690</td>
-<td align="right">0.664</td>
-<td align="right">0.717</td>
+<td align="right">0.749</td>
+<td align="right">0.006</td>
+<td align="right">131.10</td>
+<td align="left">0.00e+00</td>
+<td align="right">2.115</td>
+<td align="right">2.091</td>
+<td align="right">2.138</td>
 </tr>
 </tbody>
 </table>
@@ -1807,1146 +897,19 @@ kable(expglm_df)</code></pre>
               rename(ci95_lower = &quot;2.5 %&quot;, ci95_upper = &quot;97.5 %&quot;)
 
 kable(intglm_df)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-<th align="right">or</th>
-<th align="right">ci95_lower</th>
-<th align="right">ci95_upper</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">-5.301</td>
-<td align="right">0.084</td>
-<td align="right">-62.800</td>
-<td align="right">0.000</td>
-<td align="right">0.005</td>
-<td align="right">0.004</td>
-<td align="right">0.006</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp25-29</td>
-<td align="right">0.094</td>
-<td align="right">0.038</td>
-<td align="right">2.441</td>
-<td align="right">0.015</td>
-<td align="right">1.098</td>
-<td align="right">1.019</td>
-<td align="right">1.184</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp30-34</td>
-<td align="right">0.173</td>
-<td align="right">0.038</td>
-<td align="right">4.593</td>
-<td align="right">0.000</td>
-<td align="right">1.189</td>
-<td align="right">1.104</td>
-<td align="right">1.281</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp35-39</td>
-<td align="right">0.581</td>
-<td align="right">0.034</td>
-<td align="right">16.899</td>
-<td align="right">0.000</td>
-<td align="right">1.787</td>
-<td align="right">1.671</td>
-<td align="right">1.912</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp40-44</td>
-<td align="right">0.959</td>
-<td align="right">0.032</td>
-<td align="right">30.164</td>
-<td align="right">0.000</td>
-<td align="right">2.610</td>
-<td align="right">2.453</td>
-<td align="right">2.778</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp45-49</td>
-<td align="right">1.441</td>
-<td align="right">0.030</td>
-<td align="right">47.616</td>
-<td align="right">0.000</td>
-<td align="right">4.226</td>
-<td align="right">3.982</td>
-<td align="right">4.484</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp50-54</td>
-<td align="right">1.530</td>
-<td align="right">0.030</td>
-<td align="right">50.436</td>
-<td align="right">0.000</td>
-<td align="right">4.620</td>
-<td align="right">4.353</td>
-<td align="right">4.903</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp55-59</td>
-<td align="right">2.146</td>
-<td align="right">0.030</td>
-<td align="right">72.470</td>
-<td align="right">0.000</td>
-<td align="right">8.552</td>
-<td align="right">8.070</td>
-<td align="right">9.063</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp60-64</td>
-<td align="right">2.529</td>
-<td align="right">0.030</td>
-<td align="right">85.211</td>
-<td align="right">0.000</td>
-<td align="right">12.539</td>
-<td align="right">11.830</td>
-<td align="right">13.290</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp65-69</td>
-<td align="right">2.548</td>
-<td align="right">0.030</td>
-<td align="right">85.139</td>
-<td align="right">0.000</td>
-<td align="right">12.784</td>
-<td align="right">12.056</td>
-<td align="right">13.557</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp70-74</td>
-<td align="right">2.655</td>
-<td align="right">0.030</td>
-<td align="right">88.300</td>
-<td align="right">0.000</td>
-<td align="right">14.219</td>
-<td align="right">13.405</td>
-<td align="right">15.082</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp75-79</td>
-<td align="right">2.830</td>
-<td align="right">0.030</td>
-<td align="right">93.645</td>
-<td align="right">0.000</td>
-<td align="right">16.946</td>
-<td align="right">15.971</td>
-<td align="right">17.980</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp80-84</td>
-<td align="right">3.068</td>
-<td align="right">0.031</td>
-<td align="right">100.108</td>
-<td align="right">0.000</td>
-<td align="right">21.507</td>
-<td align="right">20.253</td>
-<td align="right">22.838</td>
-</tr>
-<tr class="even">
-<td align="left">age_grp85-89</td>
-<td align="right">3.373</td>
-<td align="right">0.032</td>
-<td align="right">104.775</td>
-<td align="right">0.000</td>
-<td align="right">29.153</td>
-<td align="right">27.371</td>
-<td align="right">31.052</td>
-</tr>
-<tr class="odd">
-<td align="left">age_grp90 plus</td>
-<td align="right">3.598</td>
-<td align="right">0.036</td>
-<td align="right">99.115</td>
-<td align="right">0.000</td>
-<td align="right">36.535</td>
-<td align="right">34.026</td>
-<td align="right">39.229</td>
-</tr>
-<tr class="even">
-<td align="left">sexMale</td>
-<td align="right">0.730</td>
-<td align="right">0.008</td>
-<td align="right">87.246</td>
-<td align="right">0.000</td>
-<td align="right">2.074</td>
-<td align="right">2.041</td>
-<td align="right">2.109</td>
-</tr>
-<tr class="odd">
-<td align="left">ab_id_dichotAboriginal ID</td>
-<td align="right">-0.217</td>
-<td align="right">0.014</td>
-<td align="right">-15.007</td>
-<td align="right">0.000</td>
-<td align="right">0.805</td>
-<td align="right">0.783</td>
-<td align="right">0.828</td>
-</tr>
-<tr class="even">
-<td align="left">adl_difficultyNot stated</td>
-<td align="right">0.805</td>
-<td align="right">0.019</td>
-<td align="right">41.598</td>
-<td align="right">0.000</td>
-<td align="right">2.236</td>
-<td align="right">2.153</td>
-<td align="right">2.322</td>
-</tr>
-<tr class="odd">
-<td align="left">adl_difficultyOften</td>
-<td align="right">1.220</td>
-<td align="right">0.008</td>
-<td align="right">155.536</td>
-<td align="right">0.000</td>
-<td align="right">3.389</td>
-<td align="right">3.337</td>
-<td align="right">3.441</td>
-</tr>
-<tr class="even">
-<td align="left">adl_difficultySometimes</td>
-<td align="right">0.705</td>
-<td align="right">0.008</td>
-<td align="right">93.776</td>
-<td align="right">0.000</td>
-<td align="right">2.024</td>
-<td align="right">1.995</td>
-<td align="right">2.054</td>
-</tr>
-<tr class="odd">
-<td align="left">worker_classPaid worker,no help</td>
-<td align="right">-0.141</td>
-<td align="right">0.082</td>
-<td align="right">-1.712</td>
-<td align="right">0.087</td>
-<td align="right">0.869</td>
-<td align="right">0.740</td>
-<td align="right">1.021</td>
-</tr>
-<tr class="even">
-<td align="left">worker_classPaid worker,paid help</td>
-<td align="right">-0.147</td>
-<td align="right">0.081</td>
-<td align="right">-1.804</td>
-<td align="right">0.071</td>
-<td align="right">0.864</td>
-<td align="right">0.736</td>
-<td align="right">1.013</td>
-</tr>
-<tr class="odd">
-<td align="left">worker_classPaid Worker</td>
-<td align="right">-0.179</td>
-<td align="right">0.077</td>
-<td align="right">-2.327</td>
-<td align="right">0.020</td>
-<td align="right">0.836</td>
-<td align="right">0.719</td>
-<td align="right">0.972</td>
-</tr>
-<tr class="even">
-<td align="left">worker_classSelf-employed,no help</td>
-<td align="right">-0.104</td>
-<td align="right">0.078</td>
-<td align="right">-1.329</td>
-<td align="right">0.184</td>
-<td align="right">0.901</td>
-<td align="right">0.773</td>
-<td align="right">1.051</td>
-</tr>
-<tr class="odd">
-<td align="left">worker_classSelf-employed,paid help</td>
-<td align="right">-0.177</td>
-<td align="right">0.082</td>
-<td align="right">-2.170</td>
-<td align="right">0.030</td>
-<td align="right">0.837</td>
-<td align="right">0.713</td>
-<td align="right">0.983</td>
-</tr>
-<tr class="even">
-<td align="left">worker_classNot applicable</td>
-<td align="right">0.375</td>
-<td align="right">0.081</td>
-<td align="right">4.640</td>
-<td align="right">0.000</td>
-<td align="right">1.455</td>
-<td align="right">1.242</td>
-<td align="right">1.704</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityChinese</td>
-<td align="right">-0.539</td>
-<td align="right">0.024</td>
-<td align="right">-22.668</td>
-<td align="right">0.000</td>
-<td align="right">0.583</td>
-<td align="right">0.557</td>
-<td align="right">0.611</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minoritySouth Asian</td>
-<td align="right">-0.527</td>
-<td align="right">0.027</td>
-<td align="right">-19.471</td>
-<td align="right">0.000</td>
-<td align="right">0.590</td>
-<td align="right">0.560</td>
-<td align="right">0.623</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityBlack</td>
-<td align="right">-0.328</td>
-<td align="right">0.030</td>
-<td align="right">-11.099</td>
-<td align="right">0.000</td>
-<td align="right">0.720</td>
-<td align="right">0.680</td>
-<td align="right">0.763</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minorityFilipino</td>
-<td align="right">-0.413</td>
-<td align="right">0.041</td>
-<td align="right">-9.951</td>
-<td align="right">0.000</td>
-<td align="right">0.662</td>
-<td align="right">0.610</td>
-<td align="right">0.718</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityLatin American</td>
-<td align="right">-0.689</td>
-<td align="right">0.055</td>
-<td align="right">-12.413</td>
-<td align="right">0.000</td>
-<td align="right">0.502</td>
-<td align="right">0.451</td>
-<td align="right">0.560</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minoritySoutheast Asian</td>
-<td align="right">-0.427</td>
-<td align="right">0.056</td>
-<td align="right">-7.664</td>
-<td align="right">0.000</td>
-<td align="right">0.653</td>
-<td align="right">0.585</td>
-<td align="right">0.728</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityArab</td>
-<td align="right">-0.416</td>
-<td align="right">0.054</td>
-<td align="right">-7.638</td>
-<td align="right">0.000</td>
-<td align="right">0.660</td>
-<td align="right">0.593</td>
-<td align="right">0.734</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minorityWest Asian</td>
-<td align="right">-0.668</td>
-<td align="right">0.076</td>
-<td align="right">-8.737</td>
-<td align="right">0.000</td>
-<td align="right">0.513</td>
-<td align="right">0.442</td>
-<td align="right">0.596</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityKorean</td>
-<td align="right">-0.671</td>
-<td align="right">0.084</td>
-<td align="right">-7.975</td>
-<td align="right">0.000</td>
-<td align="right">0.511</td>
-<td align="right">0.433</td>
-<td align="right">0.603</td>
-</tr>
-<tr class="even">
-<td align="left">vis_minorityJapanese</td>
-<td align="right">-0.242</td>
-<td align="right">0.067</td>
-<td align="right">-3.592</td>
-<td align="right">0.000</td>
-<td align="right">0.785</td>
-<td align="right">0.688</td>
-<td align="right">0.896</td>
-</tr>
-<tr class="odd">
-<td align="left">vis_minorityOther/multiple visible minority</td>
-<td align="right">-0.667</td>
-<td align="right">0.067</td>
-<td align="right">-10.007</td>
-<td align="right">0.000</td>
-<td align="right">0.513</td>
-<td align="right">0.450</td>
-<td align="right">0.585</td>
-</tr>
-<tr class="even">
-<td align="left">first_langFrench</td>
-<td align="right">-0.152</td>
-<td align="right">0.012</td>
-<td align="right">-12.707</td>
-<td align="right">0.000</td>
-<td align="right">0.859</td>
-<td align="right">0.839</td>
-<td align="right">0.879</td>
-</tr>
-<tr class="odd">
-<td align="left">first_langEnglish &amp; French</td>
-<td align="right">-0.161</td>
-<td align="right">0.038</td>
-<td align="right">-4.214</td>
-<td align="right">0.000</td>
-<td align="right">0.852</td>
-<td align="right">0.790</td>
-<td align="right">0.918</td>
-</tr>
-<tr class="even">
-<td align="left">first_langOther</td>
-<td align="right">-0.051</td>
-<td align="right">0.020</td>
-<td align="right">-2.554</td>
-<td align="right">0.011</td>
-<td align="right">0.951</td>
-<td align="right">0.914</td>
-<td align="right">0.988</td>
-</tr>
-<tr class="odd">
-<td align="left">employ_statusPart-time</td>
-<td align="right">0.157</td>
-<td align="right">0.013</td>
-<td align="right">12.155</td>
-<td align="right">0.000</td>
-<td align="right">1.170</td>
-<td align="right">1.140</td>
-<td align="right">1.200</td>
-</tr>
-<tr class="even">
-<td align="left">employ_statusDidn’t work</td>
-<td align="right">0.404</td>
-<td align="right">0.028</td>
-<td align="right">14.600</td>
-<td align="right">0.000</td>
-<td align="right">1.498</td>
-<td align="right">1.419</td>
-<td align="right">1.581</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation</td>
-<td align="right">-0.083</td>
-<td align="right">0.016</td>
-<td align="right">-5.179</td>
-<td align="right">0.000</td>
-<td align="right">0.920</td>
-<td align="right">0.892</td>
-<td align="right">0.950</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation</td>
-<td align="right">0.072</td>
-<td align="right">0.016</td>
-<td align="right">4.510</td>
-<td align="right">0.000</td>
-<td align="right">1.074</td>
-<td align="right">1.041</td>
-<td align="right">1.108</td>
-</tr>
-<tr class="odd">
-<td align="left">educationNone</td>
-<td align="right">0.124</td>
-<td align="right">0.010</td>
-<td align="right">12.269</td>
-<td align="right">0.000</td>
-<td align="right">1.132</td>
-<td align="right">1.110</td>
-<td align="right">1.155</td>
-</tr>
-<tr class="even">
-<td align="left">educationTrades Cert/Dip</td>
-<td align="right">-0.043</td>
-<td align="right">0.015</td>
-<td align="right">-2.823</td>
-<td align="right">0.005</td>
-<td align="right">0.958</td>
-<td align="right">0.929</td>
-<td align="right">0.987</td>
-</tr>
-<tr class="odd">
-<td align="left">educationApprenticeship Cert/Dip</td>
-<td align="right">-0.096</td>
-<td align="right">0.020</td>
-<td align="right">-4.830</td>
-<td align="right">0.000</td>
-<td align="right">0.909</td>
-<td align="right">0.874</td>
-<td align="right">0.945</td>
-</tr>
-<tr class="even">
-<td align="left">educationNon-Uni Cert/Dip &lt; 1 year</td>
-<td align="right">-0.109</td>
-<td align="right">0.028</td>
-<td align="right">-3.881</td>
-<td align="right">0.000</td>
-<td align="right">0.896</td>
-<td align="right">0.848</td>
-<td align="right">0.947</td>
-</tr>
-<tr class="odd">
-<td align="left">educationNon-Uni Cert/Dip 1-2 years</td>
-<td align="right">-0.207</td>
-<td align="right">0.018</td>
-<td align="right">-11.742</td>
-<td align="right">0.000</td>
-<td align="right">0.813</td>
-<td align="right">0.785</td>
-<td align="right">0.841</td>
-</tr>
-<tr class="even">
-<td align="left">educationNon-Uni Cert/Dip &gt; 2years</td>
-<td align="right">-0.198</td>
-<td align="right">0.019</td>
-<td align="right">-10.258</td>
-<td align="right">0.000</td>
-<td align="right">0.820</td>
-<td align="right">0.790</td>
-<td align="right">0.852</td>
-</tr>
-<tr class="odd">
-<td align="left">educationUni Cert/Dip below Bachelor’s</td>
-<td align="right">-0.134</td>
-<td align="right">0.021</td>
-<td align="right">-6.498</td>
-<td align="right">0.000</td>
-<td align="right">0.874</td>
-<td align="right">0.839</td>
-<td align="right">0.910</td>
-</tr>
-<tr class="even">
-<td align="left">educationBachelor’s degree</td>
-<td align="right">-0.349</td>
-<td align="right">0.018</td>
-<td align="right">-19.080</td>
-<td align="right">0.000</td>
-<td align="right">0.705</td>
-<td align="right">0.680</td>
-<td align="right">0.731</td>
-</tr>
-<tr class="odd">
-<td align="left">educationUni Cert/Dip above Bachelor’s</td>
-<td align="right">-0.232</td>
-<td align="right">0.034</td>
-<td align="right">-6.744</td>
-<td align="right">0.000</td>
-<td align="right">0.793</td>
-<td align="right">0.741</td>
-<td align="right">0.848</td>
-</tr>
-<tr class="even">
-<td align="left">educationMedicine etc.</td>
-<td align="right">-0.031</td>
-<td align="right">0.069</td>
-<td align="right">-0.446</td>
-<td align="right">0.656</td>
-<td align="right">0.970</td>
-<td align="right">0.848</td>
-<td align="right">1.109</td>
-</tr>
-<tr class="odd">
-<td align="left">educationMaster’s degree</td>
-<td align="right">-0.427</td>
-<td align="right">0.030</td>
-<td align="right">-14.159</td>
-<td align="right">0.000</td>
-<td align="right">0.653</td>
-<td align="right">0.615</td>
-<td align="right">0.692</td>
-</tr>
-<tr class="even">
-<td align="left">educationDoctorate</td>
-<td align="right">-0.146</td>
-<td align="right">0.058</td>
-<td align="right">-2.508</td>
-<td align="right">0.012</td>
-<td align="right">0.865</td>
-<td align="right">0.772</td>
-<td align="right">0.969</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile1 - lowest</td>
-<td align="right">0.271</td>
-<td align="right">0.018</td>
-<td align="right">14.863</td>
-<td align="right">0.000</td>
-<td align="right">1.312</td>
-<td align="right">1.266</td>
-<td align="right">1.360</td>
-</tr>
-<tr class="even">
-<td align="left">loinc_decile2</td>
-<td align="right">0.260</td>
-<td align="right">0.014</td>
-<td align="right">18.070</td>
-<td align="right">0.000</td>
-<td align="right">1.296</td>
-<td align="right">1.260</td>
-<td align="right">1.333</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile3</td>
-<td align="right">0.339</td>
-<td align="right">0.014</td>
-<td align="right">24.664</td>
-<td align="right">0.000</td>
-<td align="right">1.403</td>
-<td align="right">1.366</td>
-<td align="right">1.442</td>
-</tr>
-<tr class="even">
-<td align="left">loinc_decile4</td>
-<td align="right">0.266</td>
-<td align="right">0.014</td>
-<td align="right">19.202</td>
-<td align="right">0.000</td>
-<td align="right">1.304</td>
-<td align="right">1.270</td>
-<td align="right">1.340</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile5</td>
-<td align="right">0.205</td>
-<td align="right">0.014</td>
-<td align="right">14.619</td>
-<td align="right">0.000</td>
-<td align="right">1.228</td>
-<td align="right">1.194</td>
-<td align="right">1.262</td>
-</tr>
-<tr class="even">
-<td align="left">loinc_decile6</td>
-<td align="right">0.139</td>
-<td align="right">0.014</td>
-<td align="right">9.711</td>
-<td align="right">0.000</td>
-<td align="right">1.149</td>
-<td align="right">1.117</td>
-<td align="right">1.181</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile7</td>
-<td align="right">0.103</td>
-<td align="right">0.014</td>
-<td align="right">7.114</td>
-<td align="right">0.000</td>
-<td align="right">1.109</td>
-<td align="right">1.077</td>
-<td align="right">1.140</td>
-</tr>
-<tr class="even">
-<td align="left">loinc_decile8</td>
-<td align="right">0.075</td>
-<td align="right">0.015</td>
-<td align="right">5.148</td>
-<td align="right">0.000</td>
-<td align="right">1.078</td>
-<td align="right">1.048</td>
-<td align="right">1.110</td>
-</tr>
-<tr class="odd">
-<td align="left">loinc_decile9</td>
-<td align="right">0.046</td>
-<td align="right">0.015</td>
-<td align="right">3.097</td>
-<td align="right">0.002</td>
-<td align="right">1.047</td>
-<td align="right">1.017</td>
-<td align="right">1.078</td>
-</tr>
-<tr class="even">
-<td align="left">rur_urbRural</td>
-<td align="right">-0.061</td>
-<td align="right">0.007</td>
-<td align="right">-8.314</td>
-<td align="right">0.000</td>
-<td align="right">0.941</td>
-<td align="right">0.928</td>
-<td align="right">0.955</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceNewfoundland and Labrador</td>
-<td align="right">-0.061</td>
-<td align="right">0.022</td>
-<td align="right">-2.746</td>
-<td align="right">0.006</td>
-<td align="right">0.940</td>
-<td align="right">0.900</td>
-<td align="right">0.983</td>
-</tr>
-<tr class="even">
-<td align="left">provincePrince Edward Island</td>
-<td align="right">0.141</td>
-<td align="right">0.042</td>
-<td align="right">3.371</td>
-<td align="right">0.001</td>
-<td align="right">1.151</td>
-<td align="right">1.061</td>
-<td align="right">1.249</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceNova Scotia</td>
-<td align="right">-0.028</td>
-<td align="right">0.017</td>
-<td align="right">-1.676</td>
-<td align="right">0.094</td>
-<td align="right">0.972</td>
-<td align="right">0.941</td>
-<td align="right">1.005</td>
-</tr>
-<tr class="even">
-<td align="left">provinceNew Brunswick</td>
-<td align="right">-0.023</td>
-<td align="right">0.019</td>
-<td align="right">-1.206</td>
-<td align="right">0.228</td>
-<td align="right">0.977</td>
-<td align="right">0.942</td>
-<td align="right">1.014</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceQuebec</td>
-<td align="right">0.144</td>
-<td align="right">0.012</td>
-<td align="right">11.863</td>
-<td align="right">0.000</td>
-<td align="right">1.155</td>
-<td align="right">1.128</td>
-<td align="right">1.183</td>
-</tr>
-<tr class="even">
-<td align="left">provinceManitoba</td>
-<td align="right">0.073</td>
-<td align="right">0.015</td>
-<td align="right">4.963</td>
-<td align="right">0.000</td>
-<td align="right">1.076</td>
-<td align="right">1.045</td>
-<td align="right">1.108</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceSaskatchewan</td>
-<td align="right">0.063</td>
-<td align="right">0.016</td>
-<td align="right">3.979</td>
-<td align="right">0.000</td>
-<td align="right">1.065</td>
-<td align="right">1.033</td>
-<td align="right">1.099</td>
-</tr>
-<tr class="even">
-<td align="left">provinceAlberta</td>
-<td align="right">-0.026</td>
-<td align="right">0.011</td>
-<td align="right">-2.337</td>
-<td align="right">0.019</td>
-<td align="right">0.974</td>
-<td align="right">0.953</td>
-<td align="right">0.996</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceBritish Columbia</td>
-<td align="right">-0.064</td>
-<td align="right">0.009</td>
-<td align="right">-6.715</td>
-<td align="right">0.000</td>
-<td align="right">0.938</td>
-<td align="right">0.921</td>
-<td align="right">0.956</td>
-</tr>
-<tr class="even">
-<td align="left">provinceYukon</td>
-<td align="right">0.235</td>
-<td align="right">0.066</td>
-<td align="right">3.572</td>
-<td align="right">0.000</td>
-<td align="right">1.265</td>
-<td align="right">1.112</td>
-<td align="right">1.440</td>
-</tr>
-<tr class="odd">
-<td align="left">provinceNorthwest Territories</td>
-<td align="right">0.061</td>
-<td align="right">0.056</td>
-<td align="right">1.098</td>
-<td align="right">0.272</td>
-<td align="right">1.063</td>
-<td align="right">0.953</td>
-<td align="right">1.186</td>
-</tr>
-<tr class="even">
-<td align="left">provinceNunavut</td>
-<td align="right">0.408</td>
-<td align="right">0.060</td>
-<td align="right">6.756</td>
-<td align="right">0.000</td>
-<td align="right">1.504</td>
-<td align="right">1.336</td>
-<td align="right">1.692</td>
-</tr>
-<tr class="odd">
-<td align="left">mar_statDivorced</td>
-<td align="right">0.250</td>
-<td align="right">0.015</td>
-<td align="right">17.165</td>
-<td align="right">0.000</td>
-<td align="right">1.284</td>
-<td align="right">1.248</td>
-<td align="right">1.322</td>
-</tr>
-<tr class="even">
-<td align="left">mar_statSeparated</td>
-<td align="right">0.141</td>
-<td align="right">0.027</td>
-<td align="right">5.263</td>
-<td align="right">0.000</td>
-<td align="right">1.151</td>
-<td align="right">1.092</td>
-<td align="right">1.213</td>
-</tr>
-<tr class="odd">
-<td align="left">mar_statNever married</td>
-<td align="right">0.395</td>
-<td align="right">0.014</td>
-<td align="right">27.988</td>
-<td align="right">0.000</td>
-<td align="right">1.484</td>
-<td align="right">1.444</td>
-<td align="right">1.526</td>
-</tr>
-<tr class="even">
-<td align="left">mar_statWidowed</td>
-<td align="right">0.694</td>
-<td align="right">0.010</td>
-<td align="right">68.716</td>
-<td align="right">0.000</td>
-<td align="right">2.001</td>
-<td align="right">1.962</td>
-<td align="right">2.041</td>
-</tr>
-<tr class="odd">
-<td align="left">no_kids1 or 2</td>
-<td align="right">-0.185</td>
-<td align="right">0.008</td>
-<td align="right">-23.578</td>
-<td align="right">0.000</td>
-<td align="right">0.831</td>
-<td align="right">0.818</td>
-<td align="right">0.844</td>
-</tr>
-<tr class="even">
-<td align="left">no_kids3 or more</td>
-<td align="right">-0.381</td>
-<td align="right">0.019</td>
-<td align="right">-19.707</td>
-<td align="right">0.000</td>
-<td align="right">0.683</td>
-<td align="right">0.658</td>
-<td align="right">0.709</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationNone</td>
-<td align="right">-0.078</td>
-<td align="right">0.020</td>
-<td align="right">-3.942</td>
-<td align="right">0.000</td>
-<td align="right">0.925</td>
-<td align="right">0.890</td>
-<td align="right">0.962</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationNone</td>
-<td align="right">0.025</td>
-<td align="right">0.020</td>
-<td align="right">1.260</td>
-<td align="right">0.208</td>
-<td align="right">1.026</td>
-<td align="right">0.986</td>
-<td align="right">1.067</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationTrades Cert/Dip</td>
-<td align="right">0.007</td>
-<td align="right">0.031</td>
-<td align="right">0.217</td>
-<td align="right">0.828</td>
-<td align="right">1.007</td>
-<td align="right">0.947</td>
-<td align="right">1.070</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationTrades Cert/Dip</td>
-<td align="right">0.018</td>
-<td align="right">0.032</td>
-<td align="right">0.569</td>
-<td align="right">0.569</td>
-<td align="right">1.019</td>
-<td align="right">0.956</td>
-<td align="right">1.086</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationApprenticeship Cert/Dip</td>
-<td align="right">0.034</td>
-<td align="right">0.034</td>
-<td align="right">1.004</td>
-<td align="right">0.315</td>
-<td align="right">1.035</td>
-<td align="right">0.968</td>
-<td align="right">1.106</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationApprenticeship Cert/Dip</td>
-<td align="right">0.062</td>
-<td align="right">0.038</td>
-<td align="right">1.631</td>
-<td align="right">0.103</td>
-<td align="right">1.064</td>
-<td align="right">0.988</td>
-<td align="right">1.147</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationNon-Uni Cert/Dip &lt; 1 year</td>
-<td align="right">0.086</td>
-<td align="right">0.058</td>
-<td align="right">1.486</td>
-<td align="right">0.137</td>
-<td align="right">1.090</td>
-<td align="right">0.973</td>
-<td align="right">1.221</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationNon-Uni Cert/Dip &lt; 1 year</td>
-<td align="right">0.036</td>
-<td align="right">0.051</td>
-<td align="right">0.699</td>
-<td align="right">0.484</td>
-<td align="right">1.036</td>
-<td align="right">0.938</td>
-<td align="right">1.145</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationNon-Uni Cert/Dip 1-2 years</td>
-<td align="right">0.015</td>
-<td align="right">0.036</td>
-<td align="right">0.425</td>
-<td align="right">0.671</td>
-<td align="right">1.015</td>
-<td align="right">0.946</td>
-<td align="right">1.089</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationNon-Uni Cert/Dip 1-2 years</td>
-<td align="right">-0.006</td>
-<td align="right">0.036</td>
-<td align="right">-0.158</td>
-<td align="right">0.874</td>
-<td align="right">0.994</td>
-<td align="right">0.927</td>
-<td align="right">1.066</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationNon-Uni Cert/Dip &gt; 2years</td>
-<td align="right">0.014</td>
-<td align="right">0.034</td>
-<td align="right">0.416</td>
-<td align="right">0.678</td>
-<td align="right">1.014</td>
-<td align="right">0.950</td>
-<td align="right">1.083</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationNon-Uni Cert/Dip &gt; 2years</td>
-<td align="right">-0.013</td>
-<td align="right">0.039</td>
-<td align="right">-0.333</td>
-<td align="right">0.739</td>
-<td align="right">0.987</td>
-<td align="right">0.915</td>
-<td align="right">1.065</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationUni Cert/Dip below Bachelor’s</td>
-<td align="right">0.028</td>
-<td align="right">0.037</td>
-<td align="right">0.759</td>
-<td align="right">0.448</td>
-<td align="right">1.029</td>
-<td align="right">0.956</td>
-<td align="right">1.107</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationUni Cert/Dip below Bachelor’s</td>
-<td align="right">0.066</td>
-<td align="right">0.042</td>
-<td align="right">1.588</td>
-<td align="right">0.112</td>
-<td align="right">1.068</td>
-<td align="right">0.985</td>
-<td align="right">1.159</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationBachelor’s degree</td>
-<td align="right">0.059</td>
-<td align="right">0.033</td>
-<td align="right">1.807</td>
-<td align="right">0.071</td>
-<td align="right">1.061</td>
-<td align="right">0.995</td>
-<td align="right">1.132</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationBachelor’s degree</td>
-<td align="right">0.020</td>
-<td align="right">0.035</td>
-<td align="right">0.586</td>
-<td align="right">0.558</td>
-<td align="right">1.021</td>
-<td align="right">0.953</td>
-<td align="right">1.093</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationUni Cert/Dip above Bachelor’s</td>
-<td align="right">-0.020</td>
-<td align="right">0.060</td>
-<td align="right">-0.328</td>
-<td align="right">0.743</td>
-<td align="right">0.981</td>
-<td align="right">0.872</td>
-<td align="right">1.103</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationUni Cert/Dip above Bachelor’s</td>
-<td align="right">-0.008</td>
-<td align="right">0.067</td>
-<td align="right">-0.122</td>
-<td align="right">0.903</td>
-<td align="right">0.992</td>
-<td align="right">0.870</td>
-<td align="right">1.131</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationMedicine etc.</td>
-<td align="right">-0.103</td>
-<td align="right">0.101</td>
-<td align="right">-1.015</td>
-<td align="right">0.310</td>
-<td align="right">0.902</td>
-<td align="right">0.740</td>
-<td align="right">1.100</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationMedicine etc.</td>
-<td align="right">-0.206</td>
-<td align="right">0.127</td>
-<td align="right">-1.627</td>
-<td align="right">0.104</td>
-<td align="right">0.814</td>
-<td align="right">0.634</td>
-<td align="right">1.043</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationMaster’s degree</td>
-<td align="right">0.057</td>
-<td align="right">0.048</td>
-<td align="right">1.170</td>
-<td align="right">0.242</td>
-<td align="right">1.058</td>
-<td align="right">0.963</td>
-<td align="right">1.164</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationMaster’s degree</td>
-<td align="right">0.035</td>
-<td align="right">0.057</td>
-<td align="right">0.617</td>
-<td align="right">0.537</td>
-<td align="right">1.036</td>
-<td align="right">0.926</td>
-<td align="right">1.160</td>
-</tr>
-<tr class="odd">
-<td align="left">generation1st Generation:educationDoctorate</td>
-<td align="right">-0.002</td>
-<td align="right">0.079</td>
-<td align="right">-0.031</td>
-<td align="right">0.976</td>
-<td align="right">0.998</td>
-<td align="right">0.854</td>
-<td align="right">1.165</td>
-</tr>
-<tr class="even">
-<td align="left">generation2nd Generation:educationDoctorate</td>
-<td align="right">-0.154</td>
-<td align="right">0.108</td>
-<td align="right">-1.430</td>
-<td align="right">0.153</td>
-<td align="right">0.857</td>
-<td align="right">0.695</td>
-<td align="right">1.059</td>
-</tr>
-<tr class="odd">
-<td align="left">sexMale:mar_statDivorced</td>
-<td align="right">-0.246</td>
-<td align="right">0.020</td>
-<td align="right">-12.329</td>
-<td align="right">0.000</td>
-<td align="right">0.782</td>
-<td align="right">0.752</td>
-<td align="right">0.813</td>
-</tr>
-<tr class="even">
-<td align="left">sexMale:mar_statSeparated</td>
-<td align="right">0.015</td>
-<td align="right">0.035</td>
-<td align="right">0.426</td>
-<td align="right">0.670</td>
-<td align="right">1.015</td>
-<td align="right">0.948</td>
-<td align="right">1.086</td>
-</tr>
-<tr class="odd">
-<td align="left">sexMale:mar_statNever married</td>
-<td align="right">-0.345</td>
-<td align="right">0.018</td>
-<td align="right">-19.483</td>
-<td align="right">0.000</td>
-<td align="right">0.708</td>
-<td align="right">0.684</td>
-<td align="right">0.733</td>
-</tr>
-<tr class="even">
-<td align="left">sexMale:mar_statWidowed</td>
-<td align="right">-0.008</td>
-<td align="right">0.018</td>
-<td align="right">-0.418</td>
-<td align="right">0.676</td>
-<td align="right">0.993</td>
-<td align="right">0.958</td>
-<td align="right">1.028</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>save(expglm, file = here::here(&quot;assets/clean_data/expglm.rds&quot;))
+<pre class="r"><code># save(expglm, file = here::here(&quot;assets/clean_data/expglm.rds&quot;))
 feather::write_feather(expglm_df, path=here::here(&quot;assets/clean_data/expglm_df.feather&quot;))
-save(interactionglm, file = here::here(&quot;assets/clean_data/intglm.rds&quot;))
-feather::write_feather(intglm_df, path=here::here(&quot;assets/clean_data/intglm_df.feather&quot;))</code></pre>
+# save(interactionglm, file = here::here(&quot;assets/clean_data/intglm.rds&quot;))
+#feather::write_feather(intglm_df, path=here::here(&quot;assets/clean_data/intglm_df.feather&quot;))</code></pre>
+</div>
+<div id="effect-plots" class="section level2">
+<h2>Effect plots</h2>
+<pre class="r"><code>sm_effs &lt;- Effect(c(&quot;sex&quot;,&quot;mar_stat&quot;), interactionglm)
+plot(sm_effs)</code></pre>
+<pre class="r"><code>plot_model(interactionglm, type = &quot;pred&quot;, terms=c(&quot;sex&quot;, &quot;mar_stat&quot;), axis.title=c(&quot;Sex&quot;, &quot;Predicted probability of death&quot;), title=&quot;Sex and Marital Status interaction&quot;, legend.title=&quot;Marital Status&quot; )</code></pre>
+<pre class="r"><code>ge_effs &lt;- Effect(c(&quot;education&quot;,&quot;generation&quot;), interactionglm)
+plot(ge_effs, axes=list(x=list(labels=letters[1:13]), y=list(lab=&quot;Probability of death&quot;)))</code></pre>
+<pre class="r"><code>plot_model(interactionglm, type = &quot;pred&quot;, terms=c(&quot;education&quot;, &quot;generation&quot;), axis.title=c(&quot;Generation&quot;, &quot;Predicted probability of death&quot;), title=&quot;Education and Generation interaction&quot;, legend.title=&quot;Marital Status&quot; )</code></pre>
 </div>
 </div>
 

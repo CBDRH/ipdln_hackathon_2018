@@ -1,0 +1,97 @@
+---
+title: "Logisitic Regression of Mortality in Canada"
+author: "Sumeet Kalia, Tim Churches, David Henderson"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: readable
+---
+    
+Column 
+-------------------------------------
+    
+### Odds ratio of Mortality by Province
+    
+```{r map, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics(here::here("assets/Sumeet/odds-ratio.PNG"))
+```
+
+
+Column {.tabset}
+-------------------------------------
+
+### The Model
+
+`interactionglm <- speedglm(dead ~ age_grp + sex +  
+                     employ_status + 
+                     generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + sex*mar_stat, 
+                     family=binomial(), data=clean_data)`
+                     
+### Age groups
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_age_grp-1.png"))
+```   
+
+### Sex
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_sex-1.png"))
+```   
+
+### Province
+    
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_province-1.png"))
+```
+
+### Rural/Urban
+    
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_rur_urb-1.png"))
+```
+ 
+### Education
+    
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_ed-1.png"))
+```
+
+### Employment status
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_employ-1.png"))
+```
+
+###Migrant generation
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_gen-1.png"))
+```
+
+###Income decile
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_loinc_decile-1.png"))
+```
+
+###Marital Status
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_mar-1.png"))
+```
+
+
+### Suggestions
+
+If using `synthpop` to create synthetic data:
+
+* document the generation process (show us the code!)
+    * the order of column generation matters!
+    * interactions are only synthesised for columns to the left of each column
+* provide replicates --- multiple versions of the synthetic dataset
+    * stochastic error in the mean of the synthetic estimates can thus be reduced
+
+
+
+

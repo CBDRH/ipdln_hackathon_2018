@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width=10, fig.hieght=6)
+knitr::opts_chunk$set(echo = TRUE, fig.width=10, fig.hieght=6, cache=TRUE)
 options(digits = 3)
 
 library(tidyverse)
@@ -28,38 +28,37 @@ library(ggplot2)
 
 # Expanded model
 
-
 ## Load data
 
 ```{r load-data-a}
 clean_data <- read_feather(path=here::here("assets/clean_data/clean_data.feather"))
 ```
 
-```{r subset-data-a, eval=TRUE}
+```{r subset-data-a, eval=FALSE}
 clean_data %<>% sample_frac(size=0.5)
 ```
 
-```{r expanded_glm-a}
-expglm <- glm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + 
-                     vis_minority + first_lang + employ_status + 
-                     first_lang + generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + no_kids, 
+```{r expanded_glm-a, eval=TRUE}
+expglm <- speedglm(dead ~ age_grp + sex +  
+                     employ_status + 
+                     generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat, 
                      family=binomial(), data=clean_data)
 
 summary(expglm)
 ```
 
-```{r interaction_glm-a}
-interactionglm <- glm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + 
-                     vis_minority + first_lang + employ_status + 
-                     first_lang + generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + no_kids + generation*education + sex*mar_stat, 
+```{r interaction_glm-a, eval=FALSE}
+interactionglm <- glm(dead ~ age_grp + sex +  
+                     employ_status + 
+                     generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + sex*mar_stat, 
                      family=binomial(), data=clean_data)
 
 summary(interactionglm)
 ```
 
-```{r interaction_glm-b, eval=TRUE}
+```{r interaction_glm-b, eval=FALSE}
 anova(expglm, interactionglm, test = "Chi")
 ```
 
@@ -73,7 +72,7 @@ expglm_df <- tidy(expglm) %>%
 kable(expglm_df)
 ```
 
-```{r expline_glm-c}
+```{r expline_glm-c, eval=FALSE}
 intglm_df <- tidy(interactionglm) %>%
               bind_cols(tibble(or=exp(coef(interactionglm)))) %>%
               bind_cols(as.data.frame(exp(confint.default(interactionglm)))) %>%
@@ -83,28 +82,28 @@ kable(intglm_df)
 ```
 
 ```{r save-expglm, eval=TRUE}
-save(expglm, file = here::here("assets/clean_data/expglm.rds"))
+# save(expglm, file = here::here("assets/clean_data/expglm.rds"))
 feather::write_feather(expglm_df, path=here::here("assets/clean_data/expglm_df.feather"))
-save(interactionglm, file = here::here("assets/clean_data/intglm.rds"))
-feather::write_feather(intglm_df, path=here::here("assets/clean_data/intglm_df.feather"))
+# save(interactionglm, file = here::here("assets/clean_data/intglm.rds"))
+#feather::write_feather(intglm_df, path=here::here("assets/clean_data/intglm_df.feather"))
 ```
 
 ## Effect plots
 
-```{r sex_mar_effect-plot, eval=FALSE, options}
+```{r sex_mar_effect-plot-a, eval=FALSE}
 sm_effs <- Effect(c("sex","mar_stat"), interactionglm)
 plot(sm_effs)
 ```
 
-```{r sex-mar-effect-plot, eval=TRUE, fig.width=6, fig.height=4, message=FALSE}
+```{r sex-mar-effect-plot-b, eval=FALSE, fig.width=4, fig.height=3, message=FALSE}
 plot_model(interactionglm, type = "pred", terms=c("sex", "mar_stat"), axis.title=c("Sex", "Predicted probability of death"), title="Sex and Marital Status interaction", legend.title="Marital Status" )
 ```
 
-```{r gen_ed_effect-plot, eval=FALSE, options}
+```{r gen_ed_effect-plot-a, eval=FALSE}
 ge_effs <- Effect(c("education","generation"), interactionglm)
 plot(ge_effs, axes=list(x=list(labels=letters[1:13]), y=list(lab="Probability of death")))
 ```
 
-```{r gen-ed-effect-plot, eval=TRUE, fig.width=6, fig.height=4, message=FALSE}
-plot_model(interactionglm, type = "pred", terms=c("sex", "mar_stat"), axis.title=c("Sex", "Predicted probability of death"), title="Sex and Marital Status interaction", legend.title="Marital Status" )
+```{r gen-ed-effect-plot-b, eval=FALSE, fig.width=4, fig.height=3, message=FALSE, warning=FALSE}
+plot_model(interactionglm, type = "pred", terms=c("education", "generation"), axis.title=c("Generation", "Predicted probability of death"), title="Education and Generation interaction", legend.title="Marital Status" )
 ```
