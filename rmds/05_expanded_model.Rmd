@@ -49,8 +49,8 @@ summary(expglm)
 ```{r interaction_glm-a}
 interactionglm <- glm(dead ~ age_grp + sex + adl_difficulty + worker_class + 
                      vis_minority + first_lang + employ_status + 
-                     first_lang + generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + no_kids + generation*education, 
+                     first_lang + age_imm + generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + no_fam_members + generation*education, 
                      family=binomial(), data=clean_data)
 
 summary(interactionglm)
@@ -64,7 +64,7 @@ anova(expglm, interactionglm, test = "Chi")
 
 expglm_df <- tidy(expglm) %>%
               bind_cols(tibble(or=exp(coef(expglm)))) %>%
-              bind_cols(as.data.frame(exp(confint(expglm)))) %>%
+              bind_cols(as.data.frame(exp(confint.default(expglm)))) %>%
               rename(ci95_lower = "2.5 %", ci95_upper = "97.5 %")
 
 kable(expglm_df)
@@ -73,7 +73,7 @@ kable(expglm_df)
 ```{r expline_glm-c}
 intglm_df <- tidy(interactionglm) %>%
               bind_cols(tibble(or=exp(coef(interactionglm)))) %>%
-              bind_cols(as.data.frame(exp(confint(interactionglm)))) %>%
+              bind_cols(as.data.frame(exp(confint.default(interactionglm)))) %>%
               rename(ci95_lower = "2.5 %", ci95_upper = "97.5 %")
 
 kable(intglm_df)

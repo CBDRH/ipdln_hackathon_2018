@@ -29,23 +29,28 @@ theme_set(theme_minimal(base_size = 16))
 
 ##Data
 
-```{r load}
+```{r load_data, echo=FALSE}
 expglm_df <- read_feather(here::here("assets/clean_data/expglm_df.feather"))
-expglm_df
+#expglm_df
+intglm_df <- read_feather(here::here("assets/clean_data/intglm_df.feather"))
+#intglm_df
 ```
 
 
-```{r plot}
+```{r plot-func, echo=FALSE}
 orplot <- function(df, slice_range, ref_level="", prefix="", ylab="", sorted=FALSE) {
     df %<>% 
       slice(slice_range) #Start with age groups only
     if (stringr::str_length(prefix) > 0) {
       y_labels <- stringr::str_remove(df$term, prefix) 
-      title <- paste("Mortality odds ratio -", ylab)
     } else {
       y_labels <- NULL
-      title <- "Mortality odds ratio"
     }
+    if (stringr::str_length(ylab) > 0) {
+      title <- paste("Mortality odds ratio -", ylab)
+    } else {
+      title <- "Mortality odds ratio"
+    }      
     if(sorted) {
         g <- df %>%  ggplot(aes(or, fct_reorder(term, or)))
     } else {
@@ -63,66 +68,104 @@ orplot <- function(df, slice_range, ref_level="", prefix="", ylab="", sorted=FAL
       if (!is.null(y_labels)) {
         g <- g + scale_y_discrete(labels = y_labels)
       }
-      g + labs(title = "Mortality odds ratio",
+      g + labs(title = title,
            subtitle = paste("Reference:",  ref_level),
            y = ylab,
            x = "Odds Ratio (log scale)")
 }
+```
 
-y_labels = c("90 plus", "85-89", "80-84", "75-79", "70-74", "65-69",
-             "60-64", "55-59", "50-54", "45-49", "40-44", "35-39", "30-34",
-             "25-29")
+## Expanded model
 
-orplot(expglm_df, slice_range=2:15, ref_level="19-24", prefix="age_grp", ylab="Age group")
+```{r expglm_age_grp, options}
+orplot(expglm_df, slice_range=2:15, ref_level="19-24", prefix="age_grp", ylab="Age groups")
 ```
 
 
-```{r loinc_decile, options}
-y_labels <- c("9", "8", "7", "6", "5", "4", "3", "2", "1 - lowest")
-
-orplot(expglm_df, slice_range=59:67, ref_level="Decile 10 - highest", prefix="loinc_decile", ylab="Income decile")
+```{r expglm_loinc_decile, options}
+orplot(expglm_df, slice_range=59:67, ref_level="Decile 10 - highest", prefix="loinc_decile", ylab="Income deciles")
 ```
 
 
-```{r province}
-y_labels <- c("Nunavut", "Yukon", "Prince Edward Island", "Quebec", 
-              "Northwest Territories", "Saskatchewan", "Manitoba",
-              "Alberta", "Nova Scotia", "New Brunswick", "British Columbia",
-              "Newfoundland & Labrador")
-
+```{r expglm_province}
 orplot(expglm_df, slice_range=69:80, ref_level="Ontario", sorted=TRUE, prefix="province", ylab="Province")
 ```
 
 
-```{r gen}
-y_labels <- c("2nd generation", "1st generation")
-
-orplot(expglm_df, slice_range=45:46, ref_level="3rd generation (born in Canada, both parents born in Canada") +
-  scale_y_discrete(labels = rev(y_labels))
+```{r expglm_gen}
+orplot(expglm_df, slice_range=45:46, ref_level="Born in Canada, both parents born in Canada", prefix="generation", ylab="Migrant generation")
 ```
 
-```{r ed}
+```{r expglm_ed}
 orplot(expglm_df, slice_range=47:58, ref_level="No formal education", sorted=TRUE, prefix="education", ylab="Education")
 ```
 
-```{r mar}
+```{r expglm_mar}
 orplot(expglm_df, slice_range=81:84, ref_level="Married", sorted=TRUE, prefix="mar_stat", ylab="Marital status")
 ```
 
-```{r kids}
-orplot(expglm_df, slice_range=85:86, ref_level="No kids")
+```{r expglm_kids}
+orplot(expglm_df, slice_range=85:86, ref_level="No kids", prefix="no_kids", ylab="No. of children")
 ```
 
-```{r visible_minority}
-orplot(expglm_df, slice_range=27:39, ref_level="Not a visible minority", sorted=TRUE)
+```{r expglm_visible_minority}
+orplot(expglm_df, slice_range=27:39, ref_level="Not a member of a visible minority", prefix="vis_minority", ylab="Member of a visible minority", sorted=TRUE)
 ```
 
-```{r employ}
-orplot(expglm_df, slice_range=43:44, ref_level="Full-time work")
+```{r expglm_employ}
+orplot(expglm_df, slice_range=43:44, ref_level="Full-time work", prefix="employ_status", ylab="Employment status")
 ```
 
-#Session info
+## Model with interactions
 
-```{r devtools}
-devtools::session_info()
+```{r interactionglm_age_grp, options}
+orplot(intglm_df, slice_range=2:15, ref_level="19-24", prefix="age_grp", ylab="Age groups")
+```
+
+```{r interactionglm_sex, options}
+orplot(intglm_df, slice_range=16, ref_level="Feamle", prefix="sex", ylab="Sex")
+```
+
+```{r interactionglm_loinc_decile, options}
+orplot(intglm_df, slice_range=72:80, ref_level="Decile 10 - highest", prefix="loinc_decile", ylab="Income deciles")
+```
+
+```{r interactionglm_province}
+orplot(intglm_df, slice_range=82:93, ref_level="Ontario", sorted=TRUE, prefix="province", ylab="Province")
+```
+
+```{r interactionglm_gen}
+orplot(intglm_df, slice_range=58:59, ref_level="Born in Canada, both parents born in Canada", prefix="generation", ylab="Migrant generation")
+```
+
+```{r interactionglm_ed}
+orplot(intglm_df, slice_range=60:71, ref_level="No formal education", sorted=TRUE, prefix="education", ylab="Education")
+```
+
+```{r interactionglm_mar}
+orplot(intglm_df, slice_range=94:97, ref_level="Married", sorted=TRUE, prefix="mar_stat", ylab="Marital status")
+```
+
+```{r interactionglm_family}
+orplot(intglm_df, slice_range=98:106, ref_level="No other family", prefix="no_fam_members", ylab="No. of family members")
+```
+
+```{r interactionglm_visible_minority}
+orplot(intglm_df, slice_range=26:38, ref_level="Not a member of a visible minority", prefix="vis_minority", ylab="Member of a visible minority", sorted=TRUE)
+```
+
+```{r interactionglm_employ}
+orplot(intglm_df, slice_range=42:43, ref_level="Full-time work", prefix="employ_status", ylab="Employment status")
+```
+
+```{r interactionglm_first_language}
+orplot(intglm_df, slice_range=39:41, ref_level="English", prefix="first_lang", ylab="First language")
+```
+
+```{r interactionglm_age_imm}
+orplot(intglm_df, slice_range=44:57, ref_level="English", prefix="age_imm", ylab="Age at immigration")
+```
+
+```{r interactionglm_dl_difficulty}
+orplot(intglm_df, slice_range=17:19, ref_level="None", prefix="adl_difficulty", ylab="Difficulty in activities of daily living")
 ```
