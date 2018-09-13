@@ -37,14 +37,30 @@ clean_data %<>% sample_frac(size=0.5)
 ```
 
 ```{r expanded_glm-a}
-expglm <- speedglm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + vis_minority + first_lang + employ_status + generation + education + loinc_decile + rur_urb +
+expglm <- glm(dead ~ age_grp + sex + adl_difficulty + worker_class + 
+                     vis_minority + first_lang + employ_status + 
+                     first_lang + generation + education + loinc_decile + rur_urb +
                      province  + mar_stat + no_kids, 
                      family=binomial(), data=clean_data)
 
 summary(expglm)
 ```
 
-```{r baseline_glm-b}
+```{r interaction_glm-a}
+interactionglm <- glm(dead ~ age_grp + sex + adl_difficulty + worker_class + 
+                     vis_minority + first_lang + employ_status + 
+                     first_lang + generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + no_kids + generation*education, 
+                     family=binomial(), data=clean_data)
+
+summary(interactionglm)
+```
+
+```{r interaction_glm-b}
+anova(expglm, interactionglm, test = "Chi")
+```
+
+```{r expline_glm-b}
 
 expglm_df <- tidy(expglm) %>%
               bind_cols(tibble(or=exp(coef(expglm)))) %>%
@@ -54,7 +70,18 @@ expglm_df <- tidy(expglm) %>%
 kable(expglm_df)
 ```
 
+```{r expline_glm-c}
+intglm_df <- tidy(interactionglm) %>%
+              bind_cols(tibble(or=exp(coef(interactionglm)))) %>%
+              bind_cols(as.data.frame(exp(confint(interactionglm)))) %>%
+              rename(ci95_lower = "2.5 %", ci95_upper = "97.5 %")
+
+kable(intglm_df)
+```
+
 ```{r save-expglm, eval=TRUE}
 save(expglm, file = here::here("assets/clean_data/expglm.rds"))
 feather::write_feather(expglm_df, path=here::here("assets/clean_data/expglm_df.feather"))
+save(interactionglm, file = here::here("assets/clean_data/intglm.rds"))
+feather::write_feather(intglm_df, path=here::here("assets/clean_data/intglm_df.feather"))
 ```
