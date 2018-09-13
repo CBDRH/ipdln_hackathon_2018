@@ -9,6 +9,8 @@ navbar:
       href: license.html
     - text: "davidhen.com"
       href: "https://www.davidhen.com"
+    - text: "CBDH"
+      href: "https://cbdrh.med.unsw.edu.au"
   right:
     - icon: fa-github
       href: https://github.com/davidhen/mortality_canada
