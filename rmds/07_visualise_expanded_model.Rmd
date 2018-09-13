@@ -31,8 +31,8 @@ theme_set(theme_minimal(base_size = 16))
 
 ```{r load_data, echo=FALSE}
 expglm_df <- read_feather(here::here("assets/clean_data/expglm_df.feather"))
-#expglm_df
-intglm_df <- read_feather(here::here("assets/clean_data/intglm_df.feather"))
+expglm_df
+#intglm_df <- read_feather(here::here("assets/clean_data/intglm_df.feather"))
 #intglm_df
 ```
 
@@ -69,7 +69,7 @@ orplot <- function(df, slice_range, ref_level="", prefix="", ylab="", sorted=FAL
         g <- g + scale_y_discrete(labels = y_labels)
       }
       g + labs(title = title,
-           subtitle = paste("Reference:",  ref_level),
+          subtitle = paste("Reference:",  ref_level),
            y = ylab,
            x = "Odds Ratio (log scale)")
 }
@@ -77,12 +77,12 @@ orplot <- function(df, slice_range, ref_level="", prefix="", ylab="", sorted=FAL
 
 ## Expanded model
 
-```{r expglm_age_grp, options}
+```{r expglm_age_grp}
 orplot(expglm_df, slice_range=2:15, ref_level="19-24", prefix="age_grp", ylab="Age groups")
 ```
 
 
-```{r expglm_loinc_decile, options}
+```{r expglm_loinc_decile}
 orplot(expglm_df, slice_range=59:67, ref_level="Decile 10 - highest", prefix="loinc_decile", ylab="Income deciles")
 ```
 
@@ -92,80 +92,100 @@ orplot(expglm_df, slice_range=69:80, ref_level="Ontario", sorted=TRUE, prefix="p
 ```
 
 
-```{r expglm_gen}
+
+
+
+
+```{r expglm_gen, fig.width=9}
 orplot(expglm_df, slice_range=45:46, ref_level="Born in Canada, both parents born in Canada", prefix="generation", ylab="Migrant generation")
 ```
+
+
+
+
 
 ```{r expglm_ed}
 orplot(expglm_df, slice_range=47:58, ref_level="No formal education", sorted=TRUE, prefix="education", ylab="Education")
 ```
 
+
+
+
 ```{r expglm_mar}
 orplot(expglm_df, slice_range=81:84, ref_level="Married", sorted=TRUE, prefix="mar_stat", ylab="Marital status")
 ```
+
+
 
 ```{r expglm_kids}
 orplot(expglm_df, slice_range=85:86, ref_level="No kids", prefix="no_kids", ylab="No. of children")
 ```
 
-```{r expglm_visible_minority}
+
+
+```{r expglm_visible_minority, fig.width=9}
 orplot(expglm_df, slice_range=27:39, ref_level="Not a member of a visible minority", prefix="vis_minority", ylab="Member of a visible minority", sorted=TRUE)
 ```
+
+
 
 ```{r expglm_employ}
 orplot(expglm_df, slice_range=43:44, ref_level="Full-time work", prefix="employ_status", ylab="Employment status")
 ```
 
+
+
+
 ## Model with interactions
 
 ```{r interactionglm_age_grp, options}
-orplot(intglm_df, slice_range=2:15, ref_level="19-24", prefix="age_grp", ylab="Age groups")
+#orplot(intglm_df, slice_range=2:15, ref_level="19-24", prefix="age_grp", ylab="Age groups")
 ```
 
 ```{r interactionglm_sex, options}
-orplot(intglm_df, slice_range=16, ref_level="Feamle", prefix="sex", ylab="Sex")
+#orplot(intglm_df, slice_range=16, ref_level="Feamle", prefix="sex", ylab="Sex")
 ```
 
 ```{r interactionglm_loinc_decile, options}
-orplot(intglm_df, slice_range=72:80, ref_level="Decile 10 - highest", prefix="loinc_decile", ylab="Income deciles")
+#orplot(intglm_df, slice_range=72:80, ref_level="Decile 10 - highest", prefix="loinc_decile", ylab="Income deciles")
 ```
 
 ```{r interactionglm_province}
-orplot(intglm_df, slice_range=82:93, ref_level="Ontario", sorted=TRUE, prefix="province", ylab="Province")
+#orplot(intglm_df, slice_range=82:93, ref_level="Ontario", sorted=TRUE, prefix="province", ylab="Province")
 ```
 
 ```{r interactionglm_gen}
-orplot(intglm_df, slice_range=58:59, ref_level="Born in Canada, both parents born in Canada", prefix="generation", ylab="Migrant generation")
+#orplot(intglm_df, slice_range=58:59, ref_level="Born in Canada, both parents born in Canada", prefix="generation", ylab="Migrant generation")
 ```
 
 ```{r interactionglm_ed}
-orplot(intglm_df, slice_range=60:71, ref_level="No formal education", sorted=TRUE, prefix="education", ylab="Education")
+#orplot(intglm_df, slice_range=60:71, ref_level="No formal education", sorted=TRUE, prefix="education", ylab="Education")
 ```
 
 ```{r interactionglm_mar}
-orplot(intglm_df, slice_range=94:97, ref_level="Married", sorted=TRUE, prefix="mar_stat", ylab="Marital status")
+#orplot(intglm_df, slice_range=94:97, ref_level="Married", sorted=TRUE, prefix="mar_stat", ylab="Marital status")
 ```
 
 ```{r interactionglm_family}
-orplot(intglm_df, slice_range=98:106, ref_level="No other family", prefix="no_fam_members", ylab="No. of family members")
+#orplot(intglm_df, slice_range=98:106, ref_level="No other family", prefix="no_fam_members", ylab="No. of family members")
 ```
 
 ```{r interactionglm_visible_minority}
-orplot(intglm_df, slice_range=26:38, ref_level="Not a member of a visible minority", prefix="vis_minority", ylab="Member of a visible minority", sorted=TRUE)
+#orplot(intglm_df, slice_range=26:38, ref_level="Not a member of a visible minority", prefix="vis_minority", ylab="Member of a visible minority", sorted=TRUE)
 ```
 
 ```{r interactionglm_employ}
-orplot(intglm_df, slice_range=42:43, ref_level="Full-time work", prefix="employ_status", ylab="Employment status")
+#orplot(intglm_df, slice_range=42:43, ref_level="Full-time work", prefix="employ_status", ylab="Employment status")
 ```
 
 ```{r interactionglm_first_language}
-orplot(intglm_df, slice_range=39:41, ref_level="English", prefix="first_lang", ylab="First language")
+#orplot(intglm_df, slice_range=39:41, ref_level="English", prefix="first_lang", ylab="First language")
 ```
 
 ```{r interactionglm_age_imm}
-orplot(intglm_df, slice_range=44:57, ref_level="English", prefix="age_imm", ylab="Age at immigration")
+#orplot(intglm_df, slice_range=44:57, ref_level="English", prefix="age_imm", ylab="Age at immigration")
 ```
 
 ```{r interactionglm_dl_difficulty}
-orplot(intglm_df, slice_range=17:19, ref_level="None", prefix="adl_difficulty", ylab="Difficulty in activities of daily living")
+#orplot(intglm_df, slice_range=17:19, ref_level="None", prefix="adl_difficulty", ylab="Difficulty in activities of daily living")
 ```

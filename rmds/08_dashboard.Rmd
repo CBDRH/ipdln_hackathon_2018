@@ -1,0 +1,70 @@
+---
+title: "Logisitic Regression of Mortality in Canada"
+author: "Sumeet Kalia, Tim Churches, David Henderson"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: spacelab
+---
+    
+Column 
+-------------------------------------
+    
+### Odds ratio of Mortality by Province
+    
+```{r map, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics(here::here("assets/Sumeet/odds-ratio.PNG"))
+```
+   
+Column {.tabset}
+-------------------------------------
+   
+### Age groups
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_age_grp-1.png"))
+```   
+ 
+### Education
+    
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_ed-1.png"))
+```
+
+### Employment status
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_employ-1.png"))
+```
+
+###Migrant generation
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_gen-1.png"))
+```
+
+###Income decile
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_loinc_decile-1.png"))
+```
+
+###Marital Status
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_mar-1.png"))
+```
+
+###Visible Minority
+
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_visible_minority-1.png"))
+```
+
+
+
+
+
+
+
+
+
