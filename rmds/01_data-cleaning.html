@@ -136,12 +136,12 @@ $(document).ready(function () {
 <h3>Packages</h3>
 <p>Load packages required…</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(magrittr) #Pipe operators</code></pre>
@@ -242,10 +242,12 @@ library(sf)    #maps and shapefile reading</code></pre>
 <h3>Clean names and factorise</h3>
 <pre class="r"><code>raw_data %&lt;&gt;% 
   rename(ab_id_dichot = ABDERR_synth) %&gt;% 
+  mutate(vab_id_dichot = if_else(ab_id_dichot == 2, 0L, ab_id_dichot)) %&gt;%
   mutate(ab_id_dichot = factor(ab_id_dichot,
                                levels = c(1, 2),
-                               labels = c(&quot;Aboriginal ID&quot;,
-                                          &quot;Non-Aboriginal ID&quot;))
+                               labels = c(&quot;Non-Aboriginal ID&quot;,
+                                          &quot;Aboriginal ID&quot;
+                                          ))
          ) %&gt;% 
   rename(ab_id_detailed = ABIDENT_synth) %&gt;% 
   mutate(ab_id_detailed = factor(ab_id_detailed,
@@ -348,16 +350,16 @@ library(sf)    #maps and shapefile reading</code></pre>
          ) %&gt;% 
   rename(vis_minority = DVISMIN_synth) %&gt;% 
   mutate(vis_minority = if_else(vis_minority == 14, 0L, vis_minority)) %&gt;%
+  mutate(vis_minority = if_else(vis_minority == 13, 0L, vis_minority)) %&gt;%
+  mutate(vis_minority = if_else(vis_minority == 12, 11L, vis_minority)) %&gt;%
   mutate(vis_minority = factor(vis_minority,
-                               levels = c(0:13),
+                               levels = c(0:11),
                                labels = c(&quot;Not a visible minority&quot;,
                                           &quot;Chinese&quot;, &quot;South Asian&quot;, &quot;Black&quot;,
                                           &quot;Filipino&quot;, &quot;Latin American&quot;, 
                                           &quot;Southeast Asian&quot;, &quot;Arab&quot;, &quot;West Asian&quot;,
                                           &quot;Korean&quot;, &quot;Japanese&quot;, 
-                                          &quot;Other visible minority&quot;,
-                                          &quot;Multiple visible minority&quot;, 
-                                          &quot;Aboriginal self-reporting&quot;
+                                          &quot;Other/multiple visible minority&quot;
                                           ))
          ) %&gt;% 
   rename(no_fam_members = EFCNT_PP_R_synth) %&gt;% 
@@ -386,9 +388,10 @@ library(sf)    #maps and shapefile reading</code></pre>
                              labels = c(&quot;3rd Generation&quot;,&quot;1st Generation&quot;, &quot;2nd Generation&quot;))
          ) %&gt;%
   rename(education = HCDD_synth) %&gt;% 
+  mutate(education = if_else(education == 2, 0L, education)) %&gt;%
   mutate(education = factor(education,
-                            levels = c(1:13),
-                            labels = c(&quot;None&quot;, &quot;High School&quot;, &quot;Trades Cert/Dip&quot;,
+                            levels = c(0,1,3:13),
+                            labels = c(&quot;High School&quot;, &quot;None&quot;, &quot;Trades Cert/Dip&quot;,
                                        &quot;Apprenticeship Cert/Dip&quot;,
                                        &quot;Non-Uni Cert/Dip &lt; 1 year&quot;,
                                        &quot;Non-Uni Cert/Dip 1-2 years&quot;,
@@ -553,7 +556,7 @@ rm(raw_data)</code></pre>
 ##  language (EN)                        
 ##  collate  en_AU.UTF-8                 
 ##  tz       America/Edmonton            
-##  date     2018-09-12</code></pre>
+##  date     2018-09-13</code></pre>
 <pre><code>## Packages -----------------------------------------------------------------</code></pre>
 <pre><code>##  package    * version date       source        
 ##  assertthat   0.2.0   2017-04-11 CRAN (R 3.5.0)
