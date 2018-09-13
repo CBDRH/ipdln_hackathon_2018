@@ -68,10 +68,12 @@ Great, there are no missing values.
 ```{r tidy_names}
 raw_data %<>% 
   rename(ab_id_dichot = ABDERR_synth) %>% 
+  mutate(vab_id_dichot = if_else(ab_id_dichot == 2, 0L, ab_id_dichot)) %>%
   mutate(ab_id_dichot = factor(ab_id_dichot,
-                               levels = c(1, 2),
-                               labels = c("Aboriginal ID",
-                                          "Non-Aboriginal ID"))
+                               levels = c(0, 1),
+                               labels = c("Non-Aboriginal ID",
+                                          "Aboriginal ID"
+                                          ))
          ) %>% 
   rename(ab_id_detailed = ABIDENT_synth) %>% 
   mutate(ab_id_detailed = factor(ab_id_detailed,
@@ -174,16 +176,16 @@ raw_data %<>%
          ) %>% 
   rename(vis_minority = DVISMIN_synth) %>% 
   mutate(vis_minority = if_else(vis_minority == 14, 0L, vis_minority)) %>%
+  mutate(vis_minority = if_else(vis_minority == 13, 0L, vis_minority)) %>%
+  mutate(vis_minority = if_else(vis_minority == 12, 11L, vis_minority)) %>%
   mutate(vis_minority = factor(vis_minority,
-                               levels = c(0:13),
+                               levels = c(0:11),
                                labels = c("Not a visible minority",
                                           "Chinese", "South Asian", "Black",
                                           "Filipino", "Latin American", 
                                           "Southeast Asian", "Arab", "West Asian",
                                           "Korean", "Japanese", 
-                                          "Other visible minority",
-                                          "Multiple visible minority", 
-                                          "Aboriginal self-reporting"
+                                          "Other/multiple visible minority"
                                           ))
          ) %>% 
   rename(no_fam_members = EFCNT_PP_R_synth) %>% 
@@ -212,9 +214,10 @@ raw_data %<>%
                              labels = c("3rd Generation","1st Generation", "2nd Generation"))
          ) %>%
   rename(education = HCDD_synth) %>% 
+  mutate(education = if_else(education == 2, 0L, education)) %>%
   mutate(education = factor(education,
-                            levels = c(1:13),
-                            labels = c("None", "High School", "Trades Cert/Dip",
+                            levels = c(0,1,3:13),
+                            labels = c("High School", "None", "Trades Cert/Dip",
                                        "Apprenticeship Cert/Dip",
                                        "Non-Uni Cert/Dip < 1 year",
                                        "Non-Uni Cert/Dip 1-2 years",

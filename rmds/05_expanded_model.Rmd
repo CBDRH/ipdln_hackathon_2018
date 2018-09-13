@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width=10, fig.hieght=6)
 options(digits = 3)
 
 library(tidyverse)
@@ -19,6 +19,9 @@ library(feather)
 library(speedglm)
 library(broom)
 library(effects)
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
 ```
 
 # Intro
@@ -37,7 +40,7 @@ clean_data %<>% sample_frac(size=0.5)
 ```
 
 ```{r expanded_glm-a}
-expglm <- glm(dead ~ age_grp + sex + adl_difficulty + worker_class + 
+expglm <- glm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + 
                      vis_minority + first_lang + employ_status + 
                      first_lang + generation + education + loinc_decile + rur_urb +
                      province  + mar_stat + no_kids, 
@@ -47,16 +50,16 @@ summary(expglm)
 ```
 
 ```{r interaction_glm-a}
-interactionglm <- glm(dead ~ age_grp + sex + adl_difficulty + worker_class + 
+interactionglm <- glm(dead ~ age_grp + sex + ab_id_dichot + adl_difficulty + worker_class + 
                      vis_minority + first_lang + employ_status + 
-                     first_lang + age_imm + generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + no_fam_members + generation*education, 
+                     first_lang + generation + education + loinc_decile + rur_urb +
+                     province  + mar_stat + no_kids + generation*education + sex*mar_stat, 
                      family=binomial(), data=clean_data)
 
 summary(interactionglm)
 ```
 
-```{r interaction_glm-b}
+```{r interaction_glm-b, eval=TRUE}
 anova(expglm, interactionglm, test = "Chi")
 ```
 
@@ -84,4 +87,24 @@ save(expglm, file = here::here("assets/clean_data/expglm.rds"))
 feather::write_feather(expglm_df, path=here::here("assets/clean_data/expglm_df.feather"))
 save(interactionglm, file = here::here("assets/clean_data/intglm.rds"))
 feather::write_feather(intglm_df, path=here::here("assets/clean_data/intglm_df.feather"))
+```
+
+## Effect plots
+
+```{r sex_mar_effect-plot, eval=FALSE, options}
+sm_effs <- Effect(c("sex","mar_stat"), interactionglm)
+plot(sm_effs)
+```
+
+```{r sex-mar-effect-plot, eval=TRUE, fig.width=6, fig.height=4, message=FALSE}
+plot_model(interactionglm, type = "pred", terms=c("sex", "mar_stat"), axis.title=c("Sex", "Predicted probability of death"), title="Sex and Marital Status interaction", legend.title="Marital Status" )
+```
+
+```{r gen_ed_effect-plot, eval=FALSE, options}
+ge_effs <- Effect(c("education","generation"), interactionglm)
+plot(ge_effs, axes=list(x=list(labels=letters[1:13]), y=list(lab="Probability of death")))
+```
+
+```{r gen-ed-effect-plot, eval=TRUE, fig.width=6, fig.height=4, message=FALSE}
+plot_model(interactionglm, type = "pred", terms=c("sex", "mar_stat"), axis.title=c("Sex", "Predicted probability of death"), title="Sex and Marital Status interaction", legend.title="Marital Status" )
 ```
