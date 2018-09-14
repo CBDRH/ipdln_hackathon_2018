@@ -9,9 +9,9 @@ output:
 Column 
 -------------------------------------
     
-### Odds ratio of Mortality by Province
+###
     
-```{r map, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+```{r map, echo=FALSE, out.width = '100%'}
 knitr::include_graphics(here::here("assets/Sumeet/mort-rate.PNG"))
 ```
 
@@ -19,13 +19,40 @@ knitr::include_graphics(here::here("assets/Sumeet/mort-rate.PNG"))
 Column {.tabset}
 -------------------------------------
 
+###The process
+
+* We attempted to create a reproducible work flow using R, RMarkdown, and GitHub
+* SAS output incorporated with .png (SAS *can* be run from RMarkdown but we didn't do this)
+* A website with all (currently untidy) code is hosted on GitHub pages here https://bit.ly/2Nc11GR
+* The full GitHub repo is here https://github.com/CBDRH/ipdln_hackathon_2018
+
+
 ### The Model
 
-`interactionglm <- speedglm(dead ~ age_grp + sex +  
-                     employ_status + 
-                     generation + education + loinc_decile + rur_urb +
-                     province  + mar_stat + sex*mar_stat, 
-                     family=binomial(), data=clean_data)`
+We fitted the following logistic regression model to generate the adjusted mortality rate:
+
+**R Code**
+
+```{r r_code, echo=TRUE, eval=FALSE}
+expglm <- speedglm(dead ~ 
+                     age_grp + sex + loinc_decile + rur_urb +
+                     province + education + employ_status +
+                     ab_id_dichot + mar_stat + generation,
+                   family = binomial(), data = clean_data)`
+```
+
+**SAS code**
+
+```{sas, echo=TRUE, eval = FALSE}
+model dead(ref='Not Dead')= age_grp   sex loinc_decile rur_urb province  education	employ_status ab_id_dichot mar_stat  generation   ;
+```
+
+
+### Province
+    
+```{r}
+knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_province-1.png"))
+```
                      
 ### Age groups
 
@@ -39,11 +66,6 @@ knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figur
 knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_sex-1.png"))
 ```   
 
-### Province
-    
-```{r}
-knitr::include_graphics(here::here("rmds/07_visualise_expanded_model_files/figure-html/expglm_province-1.png"))
-```
 
 ### Rural/Urban
     
